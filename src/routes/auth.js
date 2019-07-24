@@ -16,6 +16,7 @@ module.exports = (app) => {
           const payload = { id: login.id }
 
           res.json({
+            message: 'LOGADO COM SUCESSO',
             token: jwt.sign({ data: payload }, app.config.jwt.secret, { expiresIn: '1h' })
           })
         } else {

@@ -15,7 +15,7 @@ class UsersController {
     this.Users = modelUser
   }
 
-  getAll () {
+  findAll () {
     return this.Users
       .findAll({})
       .then(rs => defaultResponse(rs))

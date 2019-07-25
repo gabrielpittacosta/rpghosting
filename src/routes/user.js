@@ -5,7 +5,7 @@ module.exports = (app) => {
 
   app.route('/users')
     .get((req, res) => {
-      usersController.getAll()
+      usersController.findAll({})
         .then(data => {
           res.json(data)
         })
@@ -14,6 +14,7 @@ module.exports = (app) => {
           res.status(400)
         })
     })
+
   app.route('/users/cadastro')
     .post((req, res) => {
       usersController.create(req.body)

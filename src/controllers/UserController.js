@@ -38,7 +38,7 @@ class UsersController {
 
   update (data, params) {
     return this.Users
-      .update(data, { where: params })
+      .update(data, { individualHooks: true, where: params })
       .then(rs => rs)
       .catch(e => e)
   }

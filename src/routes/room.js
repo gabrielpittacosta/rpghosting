@@ -15,6 +15,7 @@ module.exports = (app) => {
           res.status(400)
         })
     })
+
   app.route('/criar_sala')
     .post(verifyToken, (req, res) => {
       roomsController.create(req.body)

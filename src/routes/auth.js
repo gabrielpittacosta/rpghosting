@@ -20,6 +20,7 @@ module.exports = (app) => {
             token: jwt.sign({ data: payload }, app.config.jwt.secret, { expiresIn: '1h' })
           })
         } else {
+          res.json({ message: 'FALHA AO AUTENTICAR' })
           res.sendStatus(HttpStatus.UNAUTHORIZED)
         }
       } catch (e) {

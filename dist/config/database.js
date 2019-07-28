@@ -2,8 +2,9 @@
 
 module.exports = {
   database: 'rpgprojeto',
-  username: 'gabrielpitta',
+  username: 'postgres',
   password: '123456',
+  dialect: 'postgres',
   params: {
     dialect: 'postgres',
     define: {

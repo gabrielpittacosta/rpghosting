@@ -38,8 +38,8 @@ function () {
   }
 
   _createClass(UsersController, [{
-    key: "getAll",
-    value: function getAll() {
+    key: "findAll",
+    value: function findAll() {
       return this.Users.findAll({}).then(function (rs) {
         return defaultResponse(rs);
       })["catch"](function (e) {
@@ -70,6 +70,7 @@ function () {
     key: "update",
     value: function update(data, params) {
       return this.Users.update(data, {
+        individualHooks: true,
         where: params
       }).then(function (rs) {
         return rs;

@@ -9,6 +9,11 @@ module.exports = {
         primaryKey: true,
         type: DataTypes.INTEGER
       },
+      username: {
+        allowNull: false,
+        type: DataTypes.STRING,
+        unique: true
+      },
       name: {
         allowNull: false,
         type: DataTypes.STRING
@@ -17,6 +22,11 @@ module.exports = {
         allowNull: false,
         type: DataTypes.STRING,
         unique: true
+      },
+      isMestre: {
+        allowNull: false,
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
       },
       password: {
         allowNull: false,

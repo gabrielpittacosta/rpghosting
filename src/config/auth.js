@@ -1,10 +1,11 @@
 const passport = require('passport')
 const Strategy = require('passport-jwt').Strategy
 const ExtractJwt = require('passport-jwt').ExtractJwt
+const models = require('../models/index')
 
 module.exports = (app) => {
   const jwtConfig = app.config.jwt
-  const Users = app.datasource.models.users
+  const Users = models.Users
 
   const options = {}
 

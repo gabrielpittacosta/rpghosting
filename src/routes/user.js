@@ -1,63 +1,19 @@
-const UserController = require('../controllers/UserController')
+import { getUser, getOneUser, createUser, deleteUser, updateUser } from '../controllers/UserController'
 
-module.exports = (app) => {
-  const usersController = new UserController(app.datasource.models.User)
+const express = require('express')
+const router = express.Router()
 
-  app.route('/users')
-    .get((req, res) => {
-      usersController.findAll({})
-        .then(data => {
-          res.json(data)
-        })
-        .catch(error => {
-          console.log(error)
-          res.status(400)
-        })
-    })
+const verifyToken = require('../middleware/authorization')
 
-  app.route('/users/cadastro')
-    .post((req, res) => {
-      usersController.create(req.body)
-        .then(rs => {
-          res.json(rs)
-          res.status(201)
-        })
-        .catch(error => {
-          console.log(error)
-          res.status(422)
-        })
-    })
+// /user/
+router.get('/', verifyToken, getUser)
+// /user/cadastro
+router.post('/cadastro', createUser)
+// /user/userId
+router.get('/:id', verifyToken, getOneUser)
+// /user/delete/userId
+router.delete('/delete/:id', verifyToken, deleteUser)
+// /user/update/userId
+router.put('/update/:id', verifyToken, updateUser)
 
-  app.route('/users/:id')
-    .get((req, res) => {
-      usersController.getById(req.params)
-        .then(rs => {
-          res.json(rs)
-        })
-        .catch(error => {
-          console.log(error)
-          res.status(400)
-        })
-    })
-    .put((req, res) => {
-      usersController.update(req.body, req.params)
-        .then(rs => {
-          res.json(rs)
-        })
-        .catch(error => {
-          console.log(error)
-          res.status(422)
-        })
-    })
-    .delete((req, res) => {
-      usersController.delete(req.params)
-        .then(rs => {
-          res.json(rs)
-          res.status(204)
-        })
-        .catch(error => {
-          console.log(error)
-          res.status(422)
-        })
-    })
-}
+module.exports = router

@@ -1,88 +1,130 @@
-const HttpStatus = require('http-status')
+const models = require('../models/index')
 
-const defaultResponse = (data, status = HttpStatus.OK) => ({
-  data,
-  status
-})
-
-const errorResponse = (message, status = HttpStatus.BAD_REQUEST) => defaultResponse({
-  error: message,
-  status
-}, status)
-
-class UsersController {
-  constructor (modelUser) {
-    this.Users = modelUser
-  }
-
-  findAll () {
-    return this.Users
-      .findAll({})
-      .then(rs => defaultResponse(rs))
-      .catch(e => errorResponse(e.message))
-  }
-
-  getById (params) {
-    return this.Users
-      .findOne({ where: params })
-      .then(rs => rs)
-      .catch(e => e)
-  }
-
-  create (data) {
-    return this.Users
-      .create(data)
-      .then(rs => rs)
-      .catch(e => e)
-  }
-
-  update (data, params) {
-    return this.Users
-      .update(data, { individualHooks: true, where: params })
-      .then(rs => rs)
-      .catch(e => e)
-  }
-
-  delete (params) {
-    return this.Users
-      .destroy({ where: params })
-      .then(rs => rs)
-      .catch(e => e)
-  }
-
-  async signin (data) {
-    const response = {
-      login: {
-        id: null,
-        isValid: false,
-        message: 'login invalido'
-      }
-    }
-    if (data.email && data.password) {
-      const email = data.email
-      const password = data.password
-
-      try {
-        const result = await this.Users.findOne({ where: { email } })
-        const user = await result
-
-        if (user) {
-          const isPassword = await this.Users.verifyPassword(user.password, password)
-
-          console.log('VERIFICAÇÃO DA SENHA ->' + isPassword)
-          if (isPassword) {
-            response.login.id = user.id
-            response.login.isValid = isPassword
-            response.login.message = 'LOGADO COM SUCESSO'
-
-            return response
-          }
-        }
-      } catch (e) {
-        console.error(e)
-      }
-    }
-    return response
+export async function getUser (req, res) {
+  try {
+    const users = await models.User.findAll({})
+    res.json({
+      data: users
+    })
+  } catch (error) {
+    console.error(error)
   }
 }
-module.exports = UsersController
+
+export async function getOneUser (req, res) {
+  try {
+    const { id } = req.params
+    const user = await models.User.findOne({
+      where: {
+        id
+      }
+    })
+    res.json({
+      data: user
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export async function createUser (req, res) {
+  try {
+    const { name, username, email, password } = req.body
+    let newUser = await models.User.create({
+      name,
+      username,
+      email,
+      password
+    }, {
+      fields: ['name', 'username', 'email', 'password']
+    })
+    if (newUser) {
+      return res.json({
+        message: 'Usuario criado com sucesso',
+        data: newUser
+      })
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export async function deleteUser (req, res) {
+  try {
+    const { id } = req.params
+    const deletRowCount = await models.User.destroy({
+      where: {
+        id
+      }
+    })
+    res.json({
+      message: 'Usuario deletado com sucesso',
+      count: deletRowCount
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export async function updateUser (req, res) {
+  try {
+    const { id } = req.params
+    const { name, password, email } = req.body
+    const users = await models.User.findAll({
+      where: { id },
+      attributes: ['id', 'name', 'email', 'password']
+    })
+    if (users.length > 0) {
+      users.forEach(async user => {
+        await user.update({
+          individualHooks: true,
+          name,
+          password,
+          email
+        })
+      })
+    }
+    return res.json({
+      message: 'Usuario atualizado',
+      data: users
+    })
+  } catch (e) {
+    console.log(e)
+    res.json({ message: 'Ocorreu um erro' })
+  }
+}
+
+export async function signin (data) {
+  const response = {
+    login: {
+      id: null,
+      isValid: false,
+      message: 'login invalido'
+    }
+  }
+  if (data.email && data.password) {
+    const email = data.email
+    const password = data.password
+
+    try {
+      const result = await models.User.findOne({ where: { email } })
+      const user = await result
+
+      if (user) {
+        const isPassword = await models.User.verifyPassword(user.password, password)
+
+        console.log('VERIFICAÇÃO DA SENHA ->' + isPassword)
+        if (isPassword) {
+          response.login.id = user.id
+          response.login.isValid = isPassword
+          response.login.message = 'LOGADO COM SUCESSO'
+
+          return response
+        }
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+  return response
+}

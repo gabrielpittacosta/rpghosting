@@ -5,7 +5,7 @@ var UserController = require('../controllers/UserController');
 module.exports = function (app) {
   var usersController = new UserController(app.datasource.models.User);
   app.route('/users').get(function (req, res) {
-    usersController.getAll().then(function (data) {
+    usersController.findAll({}).then(function (data) {
       res.json(data);
     })["catch"](function (error) {
       console.log(error);

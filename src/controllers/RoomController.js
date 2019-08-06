@@ -1,53 +1,92 @@
-const HttpStatus = require('http-status')
+const models = require('../models/index')
 
-const defaultResponse = (data, status = HttpStatus.OK) => ({
-  data,
-  status
-})
-
-const errorResponse = (message, status = HttpStatus.BAD_REQUEST) => defaultResponse({
-  error: message,
-  status
-}, status)
-
-class RoomsController {
-  constructor (modelRoom) {
-    this.Rooms = modelRoom
-  }
-
-  getAll () {
-    return this.Rooms
-      .findAll({})
-      .then(rs => defaultResponse(rs))
-      .catch(e => errorResponse(e.message))
-  }
-
-  getById (params) {
-    return this.Rooms
-      .findOne({ where: params })
-      .then(rs => rs)
-      .catch(e => e)
-  }
-
-  create (data) {
-    return this.Rooms
-      .create(data)
-      .then(rs => rs)
-      .catch(e => e)
-  }
-
-  update (data, params) {
-    return this.Rooms
-      .update(data, { where: params })
-      .then(rs => rs)
-      .catch(e => e)
-  }
-
-  delete (params) {
-    return this.Rooms
-      .destroy({ where: params })
-      .then(rs => rs)
-      .catch(e => e)
+export async function getRoom (req, res) {
+  try {
+    const rooms = await models.Room.findAll()
+    res.json({
+      data: rooms
+    })
+  } catch (error) {
+    console.error(error)
   }
 }
-module.exports = RoomsController
+
+export async function getOneRoom (req, res) {
+  try {
+    const { id } = req.params
+    const room = await models.Room.findOne({
+      where: {
+        id
+      }
+    })
+    res.json({
+      data: room
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export async function createRoom (req, res) {
+  try {
+    const { name, descricao, numJogadores, userId } = req.body
+    let newRoom = await models.Room.create({
+      name,
+      descricao,
+      numJogadores,
+      userId
+    }, {
+      fields: ['name', 'descricao', 'numJogadores', 'userId']
+    })
+    if (newRoom) {
+      return res.json({
+        message: 'Sala criada com sucesso',
+        data: newRoom
+      })
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export async function deleteRoom (req, res) {
+  try {
+    const { id } = req.params
+    const deletRowCount = await models.Room.destroy({
+      where: {
+        id
+      }
+    })
+    res.json({
+      message: 'Sala deletada com sucesso',
+      count: deletRowCount
+    })
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export async function updateRoom (req, res) {
+  const { id } = req.params
+  const { name, descricao } = req.body
+
+  const rooms = await models.Room.findAll({
+    individualHooks: true,
+    attributes: ['id', 'name', 'descricao'],
+    whrere: {
+      id
+    }
+  })
+  if (rooms.length > 0) {
+    rooms.forEach(async room => {
+      await room.update({
+        name,
+        descricao
+      })
+    })
+  }
+  return res.json({
+    message: 'Sala atualizada',
+    data: rooms
+  })
+}

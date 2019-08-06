@@ -1,41 +1,36 @@
-const Sequelize = require('sequelize')
-const fs = require('fs')
-const path = require('path')
+var fs = require('fs')
+var path = require('path')
+var Sequelize = require('sequelize')
+var basename = path.basename(__filename)
+var env = process.env.NODE_ENV || 'development'
+var config = require(__dirname + '/../config/config.js')[env]
+var db = {}
 
-var database = null
+if (config.use_env_variable) {
+  var sequelize = new Sequelize(process.env[config.use_env_variable], config)
+} else {
+  var sequelize = new Sequelize(config.database, config.username, config.password, config)
+}
 
-const loadModels = (sequelize) => {
-  const dir = path.join(__dirname, './')
-  const models = []
-
-  fs.readdirSync(dir).forEach(file => {
-    const modelPath = path.join(dir, file)
-    const model = sequelize.import(modelPath)
-    models[model.name] = model
+fs
+  .readdirSync(__dirname)
+  .filter(file => {
+    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js')
+  })
+  .forEach(file => {
+    var model = sequelize['import'](path.join(__dirname, file))
+    db[model.name] = model
   })
 
-  return models
-}
-
-module.exports = (app) => {
-  if (!database) {
-    const config = app.config
-    const sequelize = new Sequelize(
-      config.database,
-      config.username,
-      config.password,
-      config.params
-    )
-
-    database = {
-      sequelize,
-      Sequelize,
-      models: {}
-    }
-    database.models = loadModels(sequelize)
-
-    sequelize.sync().done(() => database)
+Object.keys(db).forEach(modelName => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db)
   }
+})
 
-  return database
-}
+db.sequelize = sequelize
+db.Sequelize = Sequelize
+db.User = require('./user')(sequelize, Sequelize)
+db.Room = require('./room')(sequelize, Sequelize)
+
+module.exports = db

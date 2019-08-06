@@ -1,66 +1,19 @@
-const RoomController = require('../controllers/RoomController')
+import { getRoom, getOneRoom, createRoom, deleteRoom, updateRoom } from '../controllers/RoomController'
+
+const express = require('express')
+const router = express.Router()
+
 const verifyToken = require('../middleware/authorization')
 
-module.exports = (app) => {
-  const roomsController = new RoomController(app.datasource.models.Room)
+// /sala/
+router.get('/', verifyToken, getRoom)
+// /sala/criarsala
+router.post('/criarsala', verifyToken, createRoom)
+// /sala/roomId
+router.get('/:id', verifyToken, getOneRoom)
+// /sala/delete/roomId
+router.delete('/delete/:id', verifyToken, deleteRoom)
+// /sala/update/roomId
+router.put('/update/:id', verifyToken, updateRoom)
 
-  app.route('/todas_as_salas')
-    .get(verifyToken, (req, res) => {
-      roomsController.getAll()
-        .then(data => {
-          res.json(data)
-        })
-        .catch(error => {
-          console.log(error)
-          res.status(400)
-        })
-    })
-
-  app.route('/criar_sala')
-    .post(verifyToken, (req, res) => {
-      roomsController.create(req.body)
-        .then(rs => {
-          res.json(rs)
-          res.status(201)
-        })
-        .catch(error => {
-          console.log(error)
-          res.status(422)
-        })
-    })
-
-  app.route('/sala/:id')
-    .get(verifyToken, (req, res) => {
-      roomsController.getById(req.params)
-        .then(rs => {
-          res.json(rs)
-        })
-        .catch(error => {
-          console.log(error)
-          res.status(400)
-        })
-    })
-  app.route('/atualizar_sala/:id')
-    .put(verifyToken, (req, res) => {
-      roomsController.update(req.body, req.params)
-        .then(rs => {
-          res.json(rs)
-        })
-        .catch(error => {
-          console.log(error)
-          res.status(422)
-        })
-    })
-  app.route('/deletar_sala/:id')
-    .delete(verifyToken, (req, res) => {
-      roomsController.delete(req.params)
-        .then(rs => {
-          res.json(rs)
-          res.status(204)
-        })
-        .catch(error => {
-          console.log(error)
-          res.status(422)
-        })
-    })
-}
+module.exports = router

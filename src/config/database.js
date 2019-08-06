@@ -1,7 +1,7 @@
+const config = require('./config')
 module.exports = {
-  database: 'rpgprojeto',
-  username: 'gabrielpitta',
-  password: '123456',
+  [process.env.NODE_ENV || 'development']: config.development,
+  dialect: 'postgres',
   params: {
     dialect: 'postgres',
     define: {

@@ -1,13 +1,9 @@
 import { signin } from '../controllers/UserController'
-
-const express = require('express')
-const router = express.Router()
-
 const config = require('../config/database')
 const HttpStatus = require('http-status')
 const jwt = require('jsonwebtoken')
 
-router.post('/', async (req, res) => {
+module.exports = async (req, res, next) => {
   try {
     const response = await signin(req.body)
     const login = response.login
@@ -20,6 +16,7 @@ router.post('/', async (req, res) => {
         message: 'LOGADO COM SUCESSO',
         token: jwt.sign({ data: payload }, config.jwt.secret, { expiresIn: '1h' })
       })
+      next()
     } else {
       res.json({ message: 'FALHA AO AUTENTICAR' })
       res.sendStatus(HttpStatus.UNAUTHORIZED)
@@ -28,6 +25,4 @@ router.post('/', async (req, res) => {
     console.error(e)
     res.sendStatus(HttpStatus.UNAUTHORIZED)
   }
-})
-
-module.exports = router
+}

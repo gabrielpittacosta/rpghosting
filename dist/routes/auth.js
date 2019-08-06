@@ -37,6 +37,7 @@ module.exports = function (app) {
                   id: login.id
                 };
                 res.json({
+                  message: 'LOGADO COM SUCESSO',
                   token: jwt.sign({
                     data: payload
                   }, app.config.jwt.secret, {
@@ -44,6 +45,9 @@ module.exports = function (app) {
                   })
                 });
               } else {
+                res.json({
+                  message: 'FALHA AO AUTENTICAR'
+                });
                 res.sendStatus(HttpStatus.UNAUTHORIZED);
               }
 

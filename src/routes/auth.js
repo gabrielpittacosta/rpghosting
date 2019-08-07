@@ -30,4 +30,21 @@ router.post('/', async (req, res) => {
   }
 })
 
+<<<<<<< HEAD
 module.exports = router
+=======
+          res.json({
+            message: 'LOGADO COM SUCESSO',
+            token: jwt.sign({ data: payload }, app.config.jwt.secret, { expiresIn: '1h' })
+          })
+        } else {
+          res.json({ message: 'FALHA AO AUTENTICAR' })
+          res.sendStatus(HttpStatus.UNAUTHORIZED)
+        }
+      } catch (e) {
+        console.error(e)
+        res.sendStatus(HttpStatus.UNAUTHORIZED)
+      }
+    })
+}
+>>>>>>> cf52fa1e0650609d8f56f805ba97bb343218d316

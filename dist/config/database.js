@@ -5,7 +5,10 @@ module.exports = {
   username: 'postgres',
   password: '123456',
   dialect: 'postgres',
+<<<<<<< HEAD
   host: '127.0.0.1',
+=======
+>>>>>>> cf52fa1e0650609d8f56f805ba97bb343218d316
   params: {
     dialect: 'postgres',
     define: {

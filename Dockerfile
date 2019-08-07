@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 FROM node:11
 
 # Create app directory
@@ -22,3 +23,19 @@ COPY .env /usr/src/app/
 EXPOSE 8000
 
 CMD npm start
+=======
+FROM node:10
+
+WORKDIR /app
+
+COPY ./package.json .
+COPY ./package-lock.json .
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 3000
+
+CMD node src/index.js
+>>>>>>> cf52fa1e0650609d8f56f805ba97bb343218d316

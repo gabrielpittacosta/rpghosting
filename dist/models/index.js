@@ -1,38 +1,37 @@
 "use strict";
 
-var Sequelize = require('sequelize');
-
 var fs = require('fs');
 
 var path = require('path');
 
-var database = null;
+var Sequelize = require('sequelize');
 
-var loadModels = function loadModels(sequelize) {
-  var dir = path.join(__dirname, './');
-  var models = [];
-  fs.readdirSync(dir).forEach(function (file) {
-    var modelPath = path.join(dir, file);
-    var model = sequelize["import"](modelPath);
-    models[model.name] = model;
-  });
-  return models;
-};
+var basename = path.basename(__filename);
+var env = process.env.NODE_ENV || 'development';
 
-module.exports = function (app) {
-  if (!database) {
-    var config = app.config;
-    var sequelize = new Sequelize(config.database, config.username, config.password, config.params);
-    database = {
-      sequelize: sequelize,
-      Sequelize: Sequelize,
-      models: {}
-    };
-    database.models = loadModels(sequelize);
-    sequelize.sync().done(function () {
-      return database;
-    });
+var config = require(__dirname + '/../config/config.js')[env];
+
+var db = {};
+
+if (config.use_env_variable) {
+  var sequelize = new Sequelize(process.env[config.use_env_variable], config);
+} else {
+  var sequelize = new Sequelize(config.database, config.username, config.password, config);
+}
+
+fs.readdirSync(__dirname).filter(function (file) {
+  return file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js';
+}).forEach(function (file) {
+  var model = sequelize['import'](path.join(__dirname, file));
+  db[model.name] = model;
+});
+Object.keys(db).forEach(function (modelName) {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
   }
-
-  return database;
-};
+});
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
+db.User = require('./user')(sequelize, Sequelize);
+db.Room = require('./room')(sequelize, Sequelize);
+module.exports = db;

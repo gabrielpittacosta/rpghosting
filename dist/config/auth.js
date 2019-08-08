@@ -6,9 +6,11 @@ var Strategy = require('passport-jwt').Strategy;
 
 var ExtractJwt = require('passport-jwt').ExtractJwt;
 
+var models = require('../models/index');
+
 module.exports = function (app) {
   var jwtConfig = app.config.jwt;
-  var Users = app.datasource.models.users;
+  var Users = models.Users;
   var options = {};
   options.secretOrKey = jwtConfig.secret;
   options.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();

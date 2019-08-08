@@ -6,15 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel src --out-dir dist",
-<<<<<<< HEAD
-    "start": "nodemon src/index.js",
-    "dev": "nodemon src/index.js --exec babel-node",
-    "db": "npx sequelize db:migrate"
-=======
     "start": "node dist/index.js",
     "dev": "nodemon src/index.js --exec babel-node",
-    "db:migrate": "./node_modules/.bin/sequelize db:migrate"
->>>>>>> cf52fa1e0650609d8f56f805ba97bb343218d316
+    "db": "./node_modules/.bin/sequelize sequelize db:migrate"
   },
   "author": "",
   "license": "ISC",

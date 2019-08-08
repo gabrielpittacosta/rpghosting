@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
+const PORT = process.env.PORT || 8000
 
 const app = express()
 
@@ -14,9 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use('/', require('./routes'))
 
-const server = app.listen(8000, () => {
-  const host = server.address().address
-  const port = server.address().port
-  console.log('Servidor rodando http://%s:%s', host, port)
+app.listen(PORT, () => {
+  console.log('Servidor rodando http:// ')
 })
 module.exports = app

@@ -6,22 +6,18 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-var express = require('express');
-
-var router = express.Router();
-
 var config = require('../config/database');
 
 var HttpStatus = require('http-status');
 
 var jwt = require('jsonwebtoken');
 
-router.post('/',
+module.exports =
 /*#__PURE__*/
 function () {
   var _ref = _asyncToGenerator(
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee(req, res) {
+  regeneratorRuntime.mark(function _callee(req, res, next) {
     var response, login, payload;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
@@ -48,6 +44,7 @@ function () {
                   expiresIn: '1h'
                 })
               });
+              next();
             } else {
               res.json({
                 message: 'FALHA AO AUTENTICAR'
@@ -72,8 +69,7 @@ function () {
     }, _callee, null, [[0, 9]]);
   }));
 
-  return function (_x, _x2) {
+  return function (_x, _x2, _x3) {
     return _ref.apply(this, arguments);
   };
-}());
-module.exports = router;
+}();

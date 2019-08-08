@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     numJogadores: DataTypes.INTEGER,
     userId: DataTypes.INTEGER
   })
+
   Room.associate = (models) => {
     Room.belongsTo(models.User, { foreignKey: 'userId', as: 'user' })
   }

@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
   })
+
   User.verifyPassword = async (password, passwordHash) => {
     try {
       if (await bcrypt.compare(passwordHash, password)) {
@@ -38,6 +39,7 @@ module.exports = (sequelize, DataTypes) => {
     }
     return false
   }
+
   User.associate = (models) => {
     User.hasMany(models.Room, { as: 'rooms' })
   }

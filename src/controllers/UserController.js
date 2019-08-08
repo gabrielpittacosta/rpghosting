@@ -8,22 +8,20 @@ export async function getUser (req, res) {
     })
   } catch (error) {
     console.error(error)
+    res.json({ message: 'Ocorreu um erro' })
   }
 }
 
 export async function getOneUser (req, res) {
   try {
     const { id } = req.params
-    const user = await models.User.findOne({
-      where: {
-        id
-      }
-    })
+    const user = await models.User.findOne({ where: { id } })
     res.json({
       data: user
     })
   } catch (error) {
     console.error(error)
+    res.json({ message: 'Ocorreu um erro' })
   }
 }
 
@@ -46,23 +44,21 @@ export async function createUser (req, res) {
     }
   } catch (error) {
     console.error(error)
+    res.json({ message: 'Ocorreu um erro' })
   }
 }
 
 export async function deleteUser (req, res) {
   try {
     const { id } = req.params
-    const deletRowCount = await models.User.destroy({
-      where: {
-        id
-      }
-    })
+    const deletRowCount = await models.User.destroy({ where: { id } })
     res.json({
       message: 'Usuario deletado com sucesso',
       count: deletRowCount
     })
   } catch (error) {
     console.error(error)
+    res.json({ message: 'Ocorreu um erro' })
   }
 }
 

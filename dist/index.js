@@ -4,51 +4,21 @@ var express = require('express');
 
 var bodyParser = require('body-parser');
 
-var cors = require('cors');
-
-var config = require('./config/database');
-
-var datasource = require('./models/index');
-
-var indexRouter = require('./routes/index');
-
-var usersRouter = require('./routes/user');
-
-var authRouter = require('./routes/auth');
-
-var roomRouter = require('./routes/room');
-
-var authorization = require('./config/auth');
+var methodOverride = require('method-override');
 
 var app = express();
-app.use(cors());
-var port = 3000;
-app.set('port', port);
-app.config = config;
-app.datasource = datasource(app);
+app.use(methodOverride('X-HTTP-Method'));
+app.use(methodOverride('X-HTTP-Method-Override'));
+app.use(methodOverride('X-Method-Override'));
+app.use(methodOverride('_method'));
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-  urlencoded: false
+  extended: true
 }));
-app.use(bodyParser.json({}));
-app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-
-  if (req.method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
-    return res.status(200).json({});
-  }
-
-  next();
-});
-var auth = authorization(app);
-app.use(auth.initialize());
-app.auth = auth;
-indexRouter(app);
-usersRouter(app);
-authRouter(app);
-roomRouter(app);
-app.listen(app.get('port'), function () {
-  console.log("Servidor rodando na porta ".concat(app.get('port')));
+app.use('/', require('./routes'));
+var server = app.listen(8000, function () {
+  var host = server.address().address;
+  var port = server.address().port;
+  console.log('Servidor rodando http://%s:%s', host, port);
 });
 module.exports = app;

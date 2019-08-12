@@ -32,5 +32,7 @@ db.sequelize = sequelize
 db.Sequelize = Sequelize
 db.User = require('./user')(sequelize, Sequelize)
 db.Room = require('./room')(sequelize, Sequelize)
+db.Ficha = require('./ficha')(sequelize, Sequelize)
+db.Dado = require('./dado')(sequelize, Sequelize)
 
 module.exports = db

@@ -2,7 +2,7 @@ const models = require('../models/index')
 
 export async function getRoom (req, res) {
   try {
-    const rooms = await models.Room.findAll()
+    const rooms = await models.Room.findAll({})
     res.json({
       data: rooms
     })

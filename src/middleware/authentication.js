@@ -1,14 +1,14 @@
 import { signin } from '../controllers/UserController'
-const config = require('../config/database')
-const HttpStatus = require('http-status')
-const jwt = require('jsonwebtoken')
+const config = require('../config/database');
+const HttpStatus = require('http-status');
+const jwt = require('jsonwebtoken');
 
 module.exports = async (req, res, next) => {
   try {
-    const response = await signin(req.body)
-    const login = response.login
+    const response = await signin(req.body);
+    const login = response.login;
 
-    console.log(login)
+    console.log(login);
     if (login.id && login.isValid) {
       const payload = { id: login.id }
 
@@ -18,11 +18,11 @@ module.exports = async (req, res, next) => {
       })
       next()
     } else {
-      res.json({ message: 'FALHA AO AUTENTICAR' })
-      res.sendStatus(HttpStatus.UNAUTHORIZED)
+      res.json({ message: 'FALHA AO AUTENTICAR' });
+      res.sendStatus(HttpStatus.UNAUTHORIZED);
     }
   } catch (e) {
-    console.error(e)
-    res.sendStatus(HttpStatus.UNAUTHORIZED)
+    console.error(e);
+    res.sendStatus(HttpStatus.UNAUTHORIZED);
   }
 }

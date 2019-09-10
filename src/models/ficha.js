@@ -28,5 +28,11 @@ module.exports = (sequelize, DataTypes) => {
     defeitos: DataTypes.STRING,
     userId: DataTypes.INTEGER
   })
+  Ficha.associate = (models) => {
+    Ficha.belongsTo(models.User, {
+      foreignKey: 'userId',
+      as: 'user'
+    })
+  }
   return Ficha
 }

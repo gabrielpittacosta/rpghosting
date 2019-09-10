@@ -1,8 +1,13 @@
 const models = require('../models/index')
+const User = require('../models/index').User
 
 export async function getRoom (req, res) {
   try {
-    const rooms = await models.Room.findAll({})
+    const rooms = await models.Room.findAll({
+      include: [{
+        model: User,
+        as: 'user'
+      }]})
     res.json({
       data: rooms
     })

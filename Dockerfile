@@ -10,6 +10,7 @@ RUN npm install
 RUN npm install bcrypt
 RUN npm install -g sequelize-cli
 
+
 COPY . .
 
 COPY ormconfig.docker.json ./ormconfig.json

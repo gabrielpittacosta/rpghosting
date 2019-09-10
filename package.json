@@ -8,14 +8,13 @@
     "build": "babel src --out-dir dist",
     "start": "node dist/index.js",
     "dev": "nodemon src/index.js --exec babel-node",
-    "db": "./node_modules/.bin/sequelize sequelize db:migrate"
+    "db": "./node_modules/.bin/sequelize db:migrate"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
     "bcrypt": "^3.0.6",
-    "bluebird": "^3.5.5",
     "body-parser": "^1.19.0",
     "config": "^3.2.2",
     "cors": "^2.8.5",
@@ -28,7 +27,7 @@
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "pg": "^7.11.0",
-    "sequelize": "^5.10.2"
+    "sequelize": "^5.18.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.5.5",

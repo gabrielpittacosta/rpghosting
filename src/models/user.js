@@ -39,10 +39,17 @@ module.exports = (sequelize, DataTypes) => {
     }
     return false
   }
-  /*
-  User.associate = (models) => {
-    User.hasMany(models.Room, { as: 'rooms' })
+  
+  User.associate = function (models) {
+    User.hasMany(models.Ficha, {
+      foreignKey: 'userId',
+      as: 'ficha'
+    })
+    User.hasMany(models.Room, { 
+      foreignKey: 'userId',
+      as: 'rooms' 
+    })
   }
-  */
+
   return User
 }

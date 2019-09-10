@@ -35,4 +35,11 @@ db.Room = require('./room')(sequelize, Sequelize)
 db.Ficha = require('./ficha')(sequelize, Sequelize)
 db.Dado = require('./dado')(sequelize, Sequelize)
 
+db.User.hasMany(db.Ficha, { foreignKey: 'userId', as: 'ficha' })
+db.Ficha.belongsTo(db.User, { foreignKey: 'userId', as: 'user'})
+
+db.User.hasMany(db.Room, { foreignKey: 'userId', as: 'room' })
+db.Room.belongsTo(db.User, { foreignKey: 'userId', as: 'user' })
+
 module.exports = db
+  

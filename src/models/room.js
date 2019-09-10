@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
   })
 
   Room.associate = (models) => {
-    Room.belongsTo(models.User, { foreignKey: 'userId' })
+    Room.belongsTo(models.User, { foreignKey: 'userId', as: 'user' })
   }
 
   return Room

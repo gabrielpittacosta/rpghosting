@@ -47,7 +47,7 @@ module.exports = {
         allowNull: true,
         dafaultValue: 0
       },
-      inpiracao: {
+      inspiracao: {
         type: DataTypes.INTEGER,
         allowNull: true,
         dafaultValue: 0
@@ -67,7 +67,7 @@ module.exports = {
         allowNull: true,
         dafaultValue: 0
       },
-      sabedoriaPassivaPercepecao: {
+      sabedoriaPassivaPercepcao: {
         type: DataTypes.INTEGER,
         allowNull: true,
         dafaultValue: 0

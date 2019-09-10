@@ -6,12 +6,12 @@ export async function getUser (req, res) {
   try {
     const users = await models.User.findAll({
       include: [{
-        model: Ficha,
-        as: 'ficha'
-      }],
-      include: [{
         model: Room,
-        as: 'room'
+        as: 'room',
+        include: [{
+          model: Ficha,
+          as: 'ficha'
+        }]
       }]
     })
     res.json({

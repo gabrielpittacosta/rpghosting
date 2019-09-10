@@ -5,8 +5,8 @@ export async function getRoom (req, res) {
   try {
     const rooms = await models.Room.findAll({
       include: [{
-        model: User,
-        as: 'user'
+        model: Ficha,
+        as: 'ficha'
       }]})
     res.json({
       data: rooms

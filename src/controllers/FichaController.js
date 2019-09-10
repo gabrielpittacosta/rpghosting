@@ -21,13 +21,14 @@ export async function getOneFicha (req, res) {
 
 export async function createFicha (req, res) {
   try {
-    const { nomeJogador, nomePersonagem, userId } = req.body
+    const { nomeJogador, nomePersonagem, userId, roomId } = req.body
     let newFicha = await models.Ficha.create({
       nomeJogador,
       nomePersonagem,
-      userId
+      userId,
+      roomId
     }, {
-      fields: ['nomeJogador', 'nomePersonagem', 'userId']
+      fields: ['nomeJogador', 'nomePersonagem', 'userId', 'roomId']
     })
     if (newFicha) {
       return res.json({

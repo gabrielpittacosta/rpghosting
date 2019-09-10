@@ -145,6 +145,14 @@ module.exports = {
           key: 'id'
         }
       },
+      roomId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Rooms',
+          key: 'id'
+        }
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE

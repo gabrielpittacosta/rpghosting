@@ -26,13 +26,9 @@ module.exports = (sequelize, DataTypes) => {
     ideias: DataTypes.STRING,
     ligacoes: DataTypes.INTEGER,
     defeitos: DataTypes.STRING,
-    userId: DataTypes.INTEGER
+    userId: DataTypes.INTEGER,
+    roomId: DataTypes.INTEGER
   })
-  Ficha.associate = (models) => {
-    Ficha.belongsTo(models.User, {
-      foreignKey: 'userId',
-      as: 'user'
-    })
-  }
+
   return Ficha
 }

@@ -1,12 +1,15 @@
 import { getUser, getOneUser, createUser, deleteUser, updateUser } from '../controllers/UserController'
 
+const connection = require('../models/index').sequelize
 const express = require('express');
 const router = express.Router();
 
 const verifyToken = require('../middleware/authorization');
 
 // /user/
-router.get('/', verifyToken, getUser);
+router.get('/', verifyToken, getUser, async () =>{
+
+});
 // /user/cadastro
 router.post('/cadastro', createUser);
 // /user/userId

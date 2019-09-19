@@ -30,6 +30,7 @@ Object.keys(db).forEach(modelName => {
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+
 // TABELAS
 db.User = require('./user')(sequelize, Sequelize);
 db.Room = require('./room')(sequelize, Sequelize);
@@ -39,7 +40,7 @@ db.Dado = require('./dado')(sequelize, Sequelize);
 // USUARIO 1:N FICHA
 db.User.hasMany(db.Ficha, { foreignKey: 'userId', as: 'ficha' });
 db.Ficha.belongsTo(db.User, { foreignKey: 'userId', as: 'user'});
-// USUARIO 1:N SALA
+// USUARIO N:N SALA
 db.User.hasMany(db.Room, { foreignKey: 'userId', as: 'room' });
 db.Room.belongsTo(db.User, { foreignKey: 'userId', as: 'user' });
 // SALA 1:N FICHA

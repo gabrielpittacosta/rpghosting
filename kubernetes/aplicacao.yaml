@@ -5,6 +5,6 @@ metadata:
 spec:
   containers:
   - name: container-app-rpg
-    image: gabrielpittacosta/rpg:1.1.12
+    image: gabrielpittacosta/rpg:1.1.13
     ports:
     - containerPort: 8000

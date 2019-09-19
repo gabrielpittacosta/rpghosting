@@ -1,7 +1,6 @@
 const models = require('../models/index');
 const Ficha = require('../models/index').Ficha
 const Room = require('../models/index').Room
-
 export async function getUser (req, res) {
   try {
     const users = await models.User.findAll({
@@ -18,11 +17,10 @@ export async function getUser (req, res) {
       data: users
     });
   } catch (error) {
-    console.error(error);
+    res.send(500);
     res.json({ message: 'Ocorreu um erro' });
   }
-}
-
+} 
 export async function getOneUser (req, res) {
   try {
     const { id } = req.params;
@@ -31,11 +29,11 @@ export async function getOneUser (req, res) {
       data: user
     });
   } catch (error) {
+    res.send(500);
     console.error(error);
     res.json({ message: 'Ocorreu um erro' });
   }
 }
-
 export async function createUser (req, res) {
   try {
     const { name, username, email, password } = req.body;
@@ -49,8 +47,7 @@ export async function createUser (req, res) {
     });
     if (newUser) {
       return res.json({
-        message: 'Usuario criado com sucesso',
-        data: newUser
+        message: 'Usuario criado com sucesso'
       });
     }
   } catch (error) {
@@ -58,7 +55,6 @@ export async function createUser (req, res) {
     res.json({ message: 'Ocorreu um erro' });
   }
 }
-
 export async function deleteUser (req, res) {
   try {
     const { id } = req.params;
@@ -72,7 +68,6 @@ export async function deleteUser (req, res) {
     res.json({ message: 'Ocorreu um erro' });
   }
 }
-
 export async function updateUser (req, res) {
   try {
     const { id } = req.params;
@@ -100,7 +95,6 @@ export async function updateUser (req, res) {
     res.json({ message: 'Ocorreu um erro' });
   }
 }
-
 export async function signin (data) {
   const response = {
     login: {
@@ -112,20 +106,16 @@ export async function signin (data) {
   if (data.email && data.password) {
     const email = data.email;
     const password = data.password;
-
     try {
       const result = await models.User.findOne({ where: { email } });
       const user = await result;
-
       if (user) {
         const isPassword = await models.User.verifyPassword(user.password, password);
-
         console.log('VERIFICAÇÃO DA SENHA ->' + isPassword)
         if (isPassword) {
           response.login.id = user.id
           response.login.isValid = isPassword
           response.login.message = 'LOGADO COM SUCESSO'
-
           return response
         }
       }

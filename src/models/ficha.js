@@ -29,6 +29,17 @@ module.exports = (sequelize, DataTypes) => {
     userId: DataTypes.INTEGER,
     roomId: DataTypes.INTEGER
   })
-
+/*
+  Ficha.validadeUser = async (user) => {
+    try {
+      if (){
+        return true
+      }
+    } catch (e) {
+      console.error(e)
+    }
+    return false
+  }
+*/
   return Ficha
 }

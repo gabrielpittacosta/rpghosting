@@ -21,21 +21,21 @@ export async function getOneFicha (req, res) {
 
 export async function createFicha (req, res) {
   try {
-    const { nomeJogador, nomePersonagem, userId, roomId } = req.body;
-    let newFicha = await models.Ficha.create({
-      nomeJogador,
-      nomePersonagem,
-      userId,
-      roomId
-    }, {
-      fields: ['nomeJogador', 'nomePersonagem', 'userId', 'roomId']
-    });
-    if (newFicha) {
-      return res.json({
-        message: 'FIcha criada com sucesso',
-        data: newFicha
+      const { nomeJogador, nomePersonagem, userId, roomId } = req.body;
+      let newFicha = await models.Ficha.create({
+        nomeJogador,
+        nomePersonagem,
+        userId,
+        roomId
+      }, {
+        fields: ['nomeJogador', 'nomePersonagem', 'userId', 'roomId']
       });
-    }
+      if (newFicha) {
+        return res.json({
+          message: 'FIcha criada com sucesso',
+          data: newFicha
+        });
+      }
   } catch (error) {
     console.error(error);
   }
@@ -109,4 +109,14 @@ export async function updateFicha (req, res) {
     message: 'Sala atualizada',
     data: fichas
   });
+}
+
+
+
+export async function validarFicha(req, res, next) {
+  try {
+    const { id } = req.params;
+  } catch (error) {
+    console.error(error);
+  }
 }

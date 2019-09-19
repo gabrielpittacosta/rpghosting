@@ -1,3 +1,5 @@
+import { sequelize } from '../models';
+
 const models = require('../models/index');
 const User = require('../models/index').User
 const Ficha = require('../models/index').Ficha
@@ -20,7 +22,6 @@ export async function getRoom (req, res) {
     console.error(error);
   }
 }
-
 export async function getOneRoom (req, res) {
   try {
     const { id } = req.params;
@@ -36,17 +37,18 @@ export async function getOneRoom (req, res) {
     console.error(error);
   }
 }
-
 export async function createRoom (req, res) {
   try {
-    const { name, descricao, numJogadores, userId } = req.body;
+    const { name, descricao, numJogadores, userId, privado, senha } = req.body;
     let newRoom = await models.Room.create({
       name,
       descricao,
       numJogadores,
-      userId
+      userId,
+      privado,
+      senha
     }, {
-      fields: ['name', 'descricao', 'numJogadores', 'userId']
+      fields: ['name', 'descricao', 'numJogadores', 'userId', 'privado', 'senha']
     });
     if (newRoom) {
       return res.json({
@@ -58,7 +60,6 @@ export async function createRoom (req, res) {
     console.error(error);
   }
 }
-
 export async function deleteRoom (req, res) {
   try {
     const { id } = req.params;
@@ -75,7 +76,6 @@ export async function deleteRoom (req, res) {
     console.error(error);
   }
 }
-
 export async function updateRoom (req, res) {
   const { id } = req.params;
   const { name, descricao } = req.body;
@@ -99,4 +99,11 @@ export async function updateRoom (req, res) {
     message: 'Sala atualizada',
     data: rooms
   });
+}
+export async function addUser (req, res) {
+  try{
+   
+  } catch(error) {
+    console.error(error);
+  } 
 }

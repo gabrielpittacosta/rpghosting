@@ -19,6 +19,18 @@ module.exports = {
         allowNull: true,
         type: DataTypes.INTEGER
       },
+      senha: {
+        allowNull: true,
+        type: DataTypes.STRING
+      },
+      privado: {
+        allowNull: false,
+        type: DataTypes.BOOLEAN
+      },
+      jogadores: {
+        allowNull: true,
+        type: DataTypes.ARRAY(DataTypes.INTEGER)
+      },
       userId: {
         type: DataTypes.INTEGER,
         allowNull: false,

@@ -102,7 +102,21 @@ export async function updateRoom (req, res) {
 }
 export async function addUser (req, res) {
   try{
-   
+    const { id } = req.params
+    const { name } = req.params
+    const NewUser = await models.User.findOne({ where:{ id } })
+    const room = await models.Room.findOne({ where:{ name } })
+    if(room.length > 0) {
+      room.forEach(async rooms => {
+        await room.update({
+          'jogadores': sequelize.fn('array_append', sequelize.col('jogadores'), NewUser)
+        },{'where': {'id': id}})
+      })
+    }
+    res.json({
+      dataUser: NewUser,
+      dataRoom: room  
+    })
   } catch(error) {
     console.error(error);
   } 

@@ -4,13 +4,10 @@ const router = express.Router();
 const verifyToken = require('../middleware/authorization');
 
 router.get('/', getRoom);
-router.get('/test', addUser);
-router.put('/:id/adicionaruser', addUser);          
+router.get('/:name/adicionaruser/:id', addUser);          
 router.post('/criarsala', verifyToken, createRoom);
 router.get('/:id', verifyToken, getOneRoom);
 router.delete('/delete/:id', verifyToken, deleteRoom);
 router.put('/update/:id', verifyToken, updateRoom);
-
-
 
 module.exports = router

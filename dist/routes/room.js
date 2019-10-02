@@ -6,16 +6,12 @@ var express = require('express');
 
 var router = express.Router();
 
-var verifyToken = require('../middleware/authorization'); // /sala/
+var verifyToken = require('../middleware/authorization');
 
-
-router.get('/', verifyToken, _RoomController.getRoom); // /sala/criarsala
-
-router.post('/criarsala', verifyToken, _RoomController.createRoom); // /sala/roomId
-
-router.get('/:id', verifyToken, _RoomController.getOneRoom); // /sala/delete/roomId
-
-router["delete"]('/delete/:id', verifyToken, _RoomController.deleteRoom); // /sala/update/roomId
-
+router.get('/', _RoomController.getRoom);
+router.get('/:name/adicionaruser/:id', _RoomController.addUser);
+router.post('/criarsala', verifyToken, _RoomController.createRoom);
+router.get('/:id', verifyToken, _RoomController.getOneRoom);
+router["delete"]('/delete/:id', verifyToken, _RoomController.deleteRoom);
 router.put('/update/:id', verifyToken, _RoomController.updateRoom);
 module.exports = router;

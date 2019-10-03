@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     userId: DataTypes.INTEGER,
     senha: DataTypes.STRING,
     privado: DataTypes.BOOLEAN,
-    jogadores: DataTypes.ARRAY(DataTypes.INTEGER)
+    jogadores: DataTypes.ARRAY(DataTypes.JSON)
   })
 
   return Room

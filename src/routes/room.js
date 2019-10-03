@@ -4,7 +4,7 @@ const router = express.Router();
 const verifyToken = require('../middleware/authorization');
 
 router.get('/', getRoom);
-router.get('/:name/adicionaruser/:id', addUser);          
+router.put('/:id/adicionaruser/', addUser);          
 router.post('/criarsala', verifyToken, createRoom);
 router.get('/:id', verifyToken, getOneRoom);
 router.delete('/delete/:id', verifyToken, deleteRoom);

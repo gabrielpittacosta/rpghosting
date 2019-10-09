@@ -1,4 +1,4 @@
-import { signin } from '../controllers/UserController'
+import { signin } from '../controllers/UserController';
 
 const express = require('express');
 const router = express.Router();

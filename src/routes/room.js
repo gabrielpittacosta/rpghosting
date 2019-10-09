@@ -1,4 +1,4 @@
-import { getRoom, getOneRoom, createRoom, deleteRoom, updateRoom, addUser } from '../controllers/RoomController'
+import { getRoom, getOneRoom, createRoom, deleteRoom, updateRoom, addUser } from '../controllers/RoomController';
 const express = require('express');
 const router = express.Router();
 const verifyToken = require('../middleware/authorization');

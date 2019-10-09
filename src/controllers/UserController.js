@@ -28,6 +28,7 @@ export async function createUser (req, res) {
     req.assert("name", "Campo nome é obrigatório ").notEmpty();
     req.assert("username", "Campo username é obrigatório ").notEmpty();
     req.assert("email", "Campo email é obrigatório ").notEmpty();
+    req.assert('email', 'Formato inválido.').isEmail();
     req.assert("password", "Campo senha é obrigatório ").notEmpty();
     var erros = req.validationErrors();
     if(erros){

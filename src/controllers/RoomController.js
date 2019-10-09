@@ -89,14 +89,11 @@ export async function addUser (req, res) {
     const { username } = req.body;
     const NewUser = await models.User.findOne({ where:{ username } });
     const room = await models.Room.findOne({ where:{ id } });
-    
     var jogadores = [];
     for(var i = 0; i < 10; i++){
       jogadores.push(NewUser)
       console.log(jogadores);
     }
-
-
     if(room.length > 0) {
       room.forEach(async rooms => {
         await jogadores.push(rooms.update({ jogadores }))

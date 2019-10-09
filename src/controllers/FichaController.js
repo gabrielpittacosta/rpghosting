@@ -113,7 +113,6 @@ export async function updateFicha (req, res) {
 }
 
 
-
 export async function validarFicha(req, res, next) {
   try {
     const { id } = req.params;

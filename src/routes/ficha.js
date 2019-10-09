@@ -1,4 +1,4 @@
-import { getFichas, getOneFicha, createFicha, deleteFicha, updateFicha } from '../controllers/FichaController'
+import { getFichas, getOneFicha, createFicha, deleteFicha, updateFicha } from '../controllers/FichaController';
 
 const express = require('express');
 const router = express.Router();

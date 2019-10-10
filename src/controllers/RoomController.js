@@ -1,5 +1,3 @@
-import { sequelize } from '../models';
-
 const models = require('../models/index');
 const User = require('../models/index').User
 const Ficha = require('../models/index').Ficha
@@ -25,6 +23,7 @@ export async function getOneRoom (req, res) {
   }
 }
 
+
 export async function createRoom (req, res) {
   try {
     req.assert("name", "Campo nome é obrigatório ").notEmpty();
@@ -37,10 +36,23 @@ export async function createRoom (req, res) {
       res.status(400).send(erros);
     }
     const { name, descricao, numJogadores, userId, privado, senha } = req.body;
-    let newRoom = await models.Room.create({ name, descricao, numJogadores, userId, privado, senha },
-      { fields: ['name', 'descricao', 'numJogadores', 'userId', 'privado', 'senha'] });
-    if (newRoom) {
-      return res.status(201).json({ message: 'Sala criada com sucesso', data: newRoom });
+    if(privado == true){
+      req.assert("senha", "Campo senha é obrigatório ").notEmpty();
+      var senhaErro = req.validationErrors();
+      if(senhaErro){
+        res.status(400).send(senhaErro);
+      }
+      let newPrivateRoom = await models.Room.create({ name, descricao, numJogadores, userId, privado, senha },
+        { fields: ['name', 'descricao', 'numJogadores', 'userId', 'privado', 'senha'] });
+      if (newPrivateRoom) {
+        return res.status(201).json({ message: 'Sala criada com sucesso', data: newPrivateRoom });
+      }
+    } else {
+      let newPublicRoom = await models.Room.create({ name, descricao, numJogadores, userId, privado, senha },
+        { fields: ['name', 'descricao', 'numJogadores', 'userId', 'privado', 'senha'] });
+      if (newPublicRoom) {
+        return res.status(201).json({ message: 'Sala criada com sucesso', data: newPublicRoom });
+      }
     }
   } catch (erro) {
     console.log('Erro ao insirir no banco ' + erro);

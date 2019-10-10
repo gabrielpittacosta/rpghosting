@@ -1,6 +1,7 @@
 const models = require('../models/index');
 const Ficha = require('../models/index').Ficha
 const Room = require('../models/index').Room
+const { check, validationResult } = require('express-validator/check');
 
 export async function getUser (req, res) {
   try {
@@ -22,14 +23,40 @@ export async function getOneUser (req, res) {
     res.status(500).send(erro);
   }
 }
-
 export async function createUser (req, res) {
   try {
     req.assert("name", "Campo nome é obrigatório ").notEmpty();
+    req.assert("name", "Campo nome tem no minimo 4 caracteres e no máximo 16 caracteres").isLength({ min: 4 }, { max: 16 });
+    req.assert("name", "Campo nome tem apenas caracteres").isString();
     req.assert("username", "Campo username é obrigatório ").notEmpty();
+    req.assert("username", "Campo username tem no minimo 4 caracteres e no máximo 16 caracteres").isLength({ min: 4 }, { max: 16 });
     req.assert("email", "Campo email é obrigatório ").notEmpty();
     req.assert('email', 'Formato inválido.').isEmail();
     req.assert("password", "Campo senha é obrigatório ").notEmpty();
+    req.assert("password", "Campo senha precisa ter no minimo 5 caracteres ").isLength({ min: 5 });
+    // Validação user e email já existente
+    /*
+    req.check('username', 'O nome de usuário já existe').custom((value, {req}) => {
+            return new Promise((resolve, reject) => {
+              User.findOne({username:req.body.username}, function(err, user){
+                if(err) {
+                  reject(new Error('Server Error'))
+                }
+                if(Boolean(user)) {
+                  reject(new Error('Username already in use'))
+                }
+                resolve(true)
+              });
+            }); 
+          })
+          req.assert('email', 'Já foi criada uma conta com esse email').custom(value => {
+            return models.User.findUserByEmail(value).then(function(user) {
+              if (user) {
+                  throw new Error('Este email já entá em uso');
+              }
+            })
+          });
+    */
     var erros = req.validationErrors();
     if(erros){
       console.log('Erros de validação foram encontrados');
@@ -41,7 +68,6 @@ export async function createUser (req, res) {
       return res.status(201).json({ data: 'Usuario criado' });
     }
   } catch (erro) {
-    console.log('Erro ao insirir no banco ' + erro);
     res.status(500).send(erro);
   }
 }

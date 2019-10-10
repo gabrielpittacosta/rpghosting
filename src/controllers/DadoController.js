@@ -1,17 +1,3 @@
-const models = require('../models/index')
-
-export async function getDado (req, res) {
-  try {
-    const dados = await models.Dado.findAll({})
-    res.json({
-      data: dados
-    })
-  } catch (error) {
-    console.error(error)
-    res.json({ message: 'Ocorreu um erro' })
-  }
-}
-
 export async function rollDados (req, res) {
   const { numDeDado } = req.body
   const { tipoDado } = req.body

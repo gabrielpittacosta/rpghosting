@@ -26,14 +26,14 @@ export async function getOneUser (req, res) {
 export async function createUser (req, res) {
   try {
     req.assert("name", "Campo nome é obrigatório ").notEmpty();
-    req.assert("name", "Campo nome tem no minimo 4 caracteres e no máximo 16 caracteres").isLength({ min: 4 }, { max: 16 });
+    req.assert("name", "Campo nome tem no minimo 4 caracteres e no máximo 16 caracteres").isLength({ max: 16 });
     req.assert("name", "Campo nome tem apenas caracteres").isString();
     req.assert("username", "Campo username é obrigatório ").notEmpty();
-    req.assert("username", "Campo username tem no minimo 4 caracteres e no máximo 16 caracteres").isLength({ min: 4 }, { max: 16 });
+    req.assert("username", "Campo username tem no minimo 4 caracteres e no máximo 16 caracteres").isLength({ min: 4, max: 16 });
     req.assert("email", "Campo email é obrigatório ").notEmpty();
     req.assert('email', 'Formato inválido.').isEmail();
     req.assert("password", "Campo senha é obrigatório ").notEmpty();
-    req.assert("password", "Campo senha precisa ter no minimo 5 caracteres ").isLength({ min: 5 });
+    req.assert("password", "Campo senha precisa ter no minimo 5 caracteres ").isLength({ min: 4, max: 16 });
     // Validação user e email já existente
     /*
     req.check('username', 'O nome de usuário já existe').custom((value, {req}) => {

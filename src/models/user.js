@@ -5,7 +5,9 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     email: DataTypes.STRING,
     password: DataTypes.STRING,
-    username: DataTypes.STRING
+    username: DataTypes.STRING,
+    isMestre: DataTypes.BOOLEAN,
+    isVerified: DataTypes.BOOLEAN
   }, {
     hooks: {
       async beforeCreate (user) {

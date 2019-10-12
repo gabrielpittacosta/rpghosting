@@ -36,6 +36,7 @@ db.User = require('./user')(sequelize, Sequelize);
 db.Room = require('./room')(sequelize, Sequelize);
 db.Ficha = require('./ficha')(sequelize, Sequelize);
 db.Dado = require('./dado')(sequelize, Sequelize);
+db.VericationToken = require('./vericationtoken')(sequelize, Sequelize);
 // ASSOCIAÇÕES
 // USUARIO 1:N FICHA
 db.User.hasMany(db.Ficha, { foreignKey: 'userId', as: 'ficha' });
@@ -46,5 +47,8 @@ db.Room.belongsTo(db.User, { foreignKey: 'userId', as: 'user' });
 // SALA 1:N FICHA
 db.Room.hasMany(db.Ficha, { foreignKey: 'roomId', as: 'ficha' });
 db.Ficha.belongsTo(db.Room, { foreignKey: 'roomId', as: 'room' });
+// VERIFICAÇÃO DO EMAIL
+db.User.hasOne(db.VericationToken, { foreignKey: 'userId', as: 'verificationtoken', foreignKeyConstraint: true });
+db.VericationToken.belongsTo(db.User, { foreignKey: 'userId', as: 'user', foreignKeyConstraint: true })
 
 module.exports = db  

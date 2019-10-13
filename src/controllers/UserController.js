@@ -34,39 +34,14 @@ export async function createUser (req, res) {
     req.assert("username", "Campo username é obrigatório").notEmpty();
     req.assert("username", "Campo username tem no minimo 4 caracteres e no máximo 16 caracteres").isLength({ min: 4, max: 16 });
     req.assert("username", "Campo username tem apenas caracteres e numeros").isAlphanumeric();
-    req.assert("username", "Esse nome de usuário já existe").custom(async value => {
-      models.User.findOne({username: req.query.username}, function(err, user){
-        if(err) {
-          console.log(err);
-        }
-        var message;
-        if(user) {
-          console.log(user)
-            message = "user exists";
-            console.log(message)
-        } else {
-            message= "user doesn't exist";
-            console.log(message)
-        }
-        res.json({message: message});
-      });
-    })
     req.assert("email", "Campo email é obrigatório ").notEmpty();
     req.assert("email", "Formato inválido").isEmail();
     req.assert("password", "Campo senha é obrigatório ").notEmpty();
     req.assert("password", "Campo senha precisa ter no minimo 5 caracteres ").isLength({ min: 4, max: 16 });
-    req.asyncValidationErrors()
-    .then(function() {
-      next();
-  }).catch(function(errors) {
-      if(errors) {
-          return res.json({
-              success:false,
-              errors: errors
-          });
-      };
-  });
-
+    var erros = req.validationErrors();
+    if(erros){
+      res.status(400).send(erros);
+    }
     const { name, username, email, password } = req.body;
     let novoUsuario = await models.User.create({ name, username, email, password }, { fields: ['name', 'username', 'email', 'password'] });
     //Helper

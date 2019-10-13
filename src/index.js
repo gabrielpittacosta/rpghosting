@@ -15,21 +15,7 @@ app.use(methodOverride('_method'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
-app.use(expressValidator({
-  customValidators: {
-    isUsernameAvailable:
-      username => {
-        return new Promise((resolve, reject) => {
-          models.User.findOne({'username': username}, (err, results) => { 
-            if(err) {
-              return resolve(err);
-            }else{
-              reject(results);
-            }
-          });
-        });
-      }}
-}));
+app.use(expressValidator());
 app.use(function(req, res, next) {
   req.io = io;
   next();

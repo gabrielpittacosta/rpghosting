@@ -34,15 +34,38 @@ export async function createUser (req, res) {
     req.assert("username", "Campo username é obrigatório").notEmpty();
     req.assert("username", "Campo username tem no minimo 4 caracteres e no máximo 16 caracteres").isLength({ min: 4, max: 16 });
     req.assert("username", "Campo username tem apenas caracteres e numeros").isAlphanumeric();
-   // req.check("username", "Esse nome de usuário já existe").isUsernameAvailable()
+    req.assert("username", "Esse nome de usuário já existe").custom(async value => {
+      models.User.findOne({username: req.query.username}, function(err, user){
+        if(err) {
+          console.log(err);
+        }
+        var message;
+        if(user) {
+          console.log(user)
+            message = "user exists";
+            console.log(message)
+        } else {
+            message= "user doesn't exist";
+            console.log(message)
+        }
+        res.json({message: message});
+      });
+    })
     req.assert("email", "Campo email é obrigatório ").notEmpty();
     req.assert("email", "Formato inválido").isEmail();
     req.assert("password", "Campo senha é obrigatório ").notEmpty();
     req.assert("password", "Campo senha precisa ter no minimo 5 caracteres ").isLength({ min: 4, max: 16 });
-    var erros = req.validationErrors();
-    if(erros){
-      res.status(400).send(erros);
-    }
+    req.asyncValidationErrors()
+    .then(function() {
+      next();
+  }).catch(function(errors) {
+      if(errors) {
+          return res.json({
+              success:false,
+              errors: errors
+          });
+      };
+  });
 
     const { name, username, email, password } = req.body;
     let novoUsuario = await models.User.create({ name, username, email, password }, { fields: ['name', 'username', 'email', 'password'] });
@@ -119,37 +142,3 @@ export async function signin (data) {
   }
   return response
 }
-export async function verificacaoEmail (req, res) {
-  return models.User.find({
-    where: { email: req.query.email }
-  })
-    .then(user => {
-      if (user.isVerified) {
-        return res.status(202).json(`Email Already Verified`);
-      } else {
-        return models.VerificationToken.find({
-          where: { token: req.query.verificationToken }
-        })
-          .then((foundToken) => {
-            if(foundToken){
-              return user
-                .update({ isVerified: true })
-                .then(updatedUser => {
-                  return res.status(403).json(`User with ${user.email} has been verified`);
-                })
-                .catch(reason => {
-                  return res.status(403).json(`Verification failed`);
-                });
-            } else {
-              return res.status(404).json(`Token expired` );
-            }
-          })
-          .catch(reason => {
-            return res.status(404).json(`Token expired`);
-          });
-      }
-    })
-    .catch(reason => {
-      return res.status(404).json(`Email not found`);
-    })
-}1

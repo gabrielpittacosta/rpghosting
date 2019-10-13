@@ -1,3 +1,4 @@
+/*
 require('dotenv').config()
 const sendGrid = require('sendgrid').mail;
 const sg = require('sendgrid')(process.env.SENDGRIDAPIKEY);
@@ -40,3 +41,4 @@ export const sendVerificationEmail = (to, token) => {
       });
     });
   };
+*/

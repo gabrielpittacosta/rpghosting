@@ -34,36 +34,16 @@ export async function createUser (req, res) {
     req.assert("username", "Campo username é obrigatório").notEmpty();
     req.assert("username", "Campo username tem no minimo 4 caracteres e no máximo 16 caracteres").isLength({ min: 4, max: 16 });
     req.assert("username", "Campo username tem apenas caracteres e numeros").isAlphanumeric();
+   // req.check("username", "Esse nome de usuário já existe").isUsernameAvailable()
     req.assert("email", "Campo email é obrigatório ").notEmpty();
     req.assert("email", "Formato inválido").isEmail();
     req.assert("password", "Campo senha é obrigatório ").notEmpty();
     req.assert("password", "Campo senha precisa ter no minimo 5 caracteres ").isLength({ min: 4, max: 16 });
-    // Validação user e email já existente
-    /*
-    req.assert('username', 'O nome de usuário já existe').custom((value, {req}) => {
-      return new Promise(() => {
-        const verifyUsername = models.User.findOne({username:value}, function(req, res){
-          if (user == verifyUsername){
-            return Promise.reject('O username já existe')
-          }
-        })
-        return Promise.resolve(true);
-      })
-    })
-    */
-    /*
-    req.assert('email', 'Já foi criada uma conta com esse email').custom(value => {
-      return models.User.findUserByEmail(value).then(function(user) {
-        if (user) {
-          throw new Error('Este email já entá em uso');
-        }
-      })
-    });
-    */
     var erros = req.validationErrors();
     if(erros){
       res.status(400).send(erros);
     }
+
     const { name, username, email, password } = req.body;
     let novoUsuario = await models.User.create({ name, username, email, password }, { fields: ['name', 'username', 'email', 'password'] });
     //Helper
@@ -172,4 +152,4 @@ export async function verificacaoEmail (req, res) {
     .catch(reason => {
       return res.status(404).json(`Email not found`);
     })
-}
+}1

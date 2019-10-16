@@ -1,59 +1,46 @@
 const models = require('../models/index');
-const Ficha = require('../models/index').Ficha
-const Room = require('../models/index').Room
-
-export async function getUser (req, res) {
+export async function getUser(req, res) {
   try {
-    const users = await models.User.findAll({ include: [{ model: Room, as: 'room', }, { model: Ficha, as: 'ficha' }], });
-    res.status(201).json({ data: users });
-  } catch (erro) {
-    console.log('Erro ao insirir no banco ' + erro);
+    await models.User.findAll({ include: [{ model: models.Room, as: 'room', }, { model: models.Ficha, as: 'ficha' }], })
+      .then(users => res.status(201).json({ data: users }));
+  } catch(erro) {
     res.status(500).send(erro);
   }
 }
 
-export async function getOneUser (req, res) {
+export async function getOneUser(req, res) {
   try {
     const { id } = req.params;
-    const user = await models.User.findOne({ where: { id } });
-    res.status(201).json({ data: user });
-  } catch (erro) {
-    console.log('Erro ao insirir no banco ' + erro);
+    await models.User.findOne({ where: { id } })
+      .then(user => res.status(201).json({ data: user }));
+  } catch(erro) {
     res.status(500).send(erro);
   }
 }
 
-export async function createUser (req, res) {
+export async function createUser(req, res) {
   try {
     const { name, username, email, password } = req.body;
+
     await models.User.create({ name, username, email, password }, { fields: ['name', 'username', 'email', 'password'] })
-      .then(() => res.status(201).json({ data: 'Usuario criado' }));
-  } catch (erro) {
+      .then(() => res.status(201).json({ data: 'Usuário criado' }));
+  } catch(erro) {
     res.status(500).send(erro);
   }
 }
 
-export async function deleteUser (req, res) {
+export async function deleteUser(req, res) {
   try {
     const { id } = req.params;
-    const deletRowCount = await models.User.destroy({ where: { id } });
-    res.status(201).json({ message: 'Usuario deletado com sucesso', count: deletRowCount });
-  } catch (erro) {
-    console.log('Erro ao insirir no banco ' + erro);
+    const deletRowCount = await models.User.destroy({ where: { id } })
+      .then(() => res.status(201).json({ data: 'Usuário deletado com sucesso', count: deletRowCount }));
+  } catch(erro) {
     res.status(500).send(erro);
   }
 }
 
 export async function updateUser (req, res) {
   try {
-    req.assert("name", "Campo nome é obrigatório ").notEmpty();
-    req.assert("email", "Campo email é obrigatório ").notEmpty();
-    req.assert("password", "Campo senha é obrigatório ").notEmpty();
-    var erros = req.validationErrors();
-    if(erros){
-      console.log('Erros de validação foram encontrados');
-      res.status(400).send(erros);
-    }
     const { id } = req.params;
     const { name, password, email } = req.body;
     const users = await models.User.findAll({ where: { id }, attributes: ['id', 'name', 'email', 'password'] });
@@ -71,26 +58,24 @@ export async function updateUser (req, res) {
 
 export async function signin (data) {
   const response = { login: { id: null, isValid: false, message: 'login invalido' } }
-  if (data.email && data.password) {
-    const email = data.email;
+  if(data.username && data.password) {
+    const username = data.username;
     const password = data.password;
     try {
-      const result = await models.User.findOne({ where: { email } });
+      const result = await models.User.findOne({ where: { username } });
       const user = await result;
-      if (user) {
+      if(user) {
         const isPassword = await models.User.verifyPassword(user.password, password);
-        console.log('VERIFICAÇÃO DA SENHA ->' + isPassword)
-        if (isPassword) {
+        if(isPassword) {
           response.login.id = user.id
           response.login.isValid = isPassword
           response.login.message = 'LOGADO COM SUCESSO'
           return response
         }
       }
-    } catch (erro) {
-      console.log('Erro ao insirir no banco ' + erro);
+    } catch(erro) {
       res.status(500).send(erro);
     }
   }
-  return response
+  return response;
 }

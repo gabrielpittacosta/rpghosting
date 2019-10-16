@@ -18,7 +18,7 @@ module.exports = (app) => {
         if (user) {
           return done(null, {
             id: user.id,
-            email: user.email
+            username: user.username
           })
         }
         return done(null, false)

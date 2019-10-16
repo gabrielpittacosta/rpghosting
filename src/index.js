@@ -6,7 +6,6 @@ const expressValidator = require('express-validator');
 const PORT = process.env.PORT || 8000;
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-
 const app = express();
 app.use(methodOverride('X-HTTP-Method'));
 app.use(methodOverride('X-HTTP-Method-Override'));
@@ -22,6 +21,6 @@ app.use(function(req, res, next) {
 });
 app.use('/', require('./routes'));
 app.listen(PORT, () => {
-  console.log('Servidor rodando http:// ');
+  console.log('Servidor rodando http://:8000...');
 });
 module.exports = app;

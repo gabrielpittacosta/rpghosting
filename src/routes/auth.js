@@ -20,7 +20,7 @@ router.post('/', async (req, res) => {
         token: jwt.sign({ data: payload }, config.jwt.secret, { expiresIn: '1h' })
       })
     } else {
-      res.json({ message: 'FALHA AO AUTENTICAR' });
+      res.status(400).json({ message: 'FALHA AO AUTENTICAR' });
       res.sendStatus(HttpStatus.UNAUTHORIZED);
     }
   } catch (e) {

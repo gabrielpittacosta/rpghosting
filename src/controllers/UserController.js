@@ -21,7 +21,6 @@ export async function getOneUser(req, res) {
 export async function createUser(req, res) {
   try {
     const { name, username, email, password } = req.body;
-
     await models.User.create({ name, username, email, password }, { fields: ['name', 'username', 'email', 'password'] })
       .then(() => res.status(201).json({ data: 'Usuário criado' }));
   } catch(erro) {
@@ -32,8 +31,8 @@ export async function createUser(req, res) {
 export async function deleteUser(req, res) {
   try {
     const { id } = req.params;
-    const deletRowCount = await models.User.destroy({ where: { id } })
-      .then(() => res.status(201).json({ data: 'Usuário deletado com sucesso', count: deletRowCount }));
+    await models.User.destroy({ where: { id } })
+      .then(deletRowCount => res.status(201).json({ data: 'Usuário deletado com sucesso', count: deletRowCount }));
   } catch(erro) {
     res.status(500).send(erro);
   }
@@ -51,7 +50,6 @@ export async function updateUser (req, res) {
     }
     return res.status(201).json({ message: 'Usuario atualizado', data: users });
   } catch (erro) {
-    console.log('Erro ao insirir no banco ' + erro);
     res.status(500).send(erro);
   }
 }

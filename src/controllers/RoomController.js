@@ -4,10 +4,9 @@ const Ficha = require('../models/index').Ficha
 
 export async function getRoom (req, res) {
   try {
-    const rooms = await models.Room.findAll({ include: [{ model: Ficha, as: 'ficha' }, { model: User, as: 'user' }]});
-    res.status(201).json({ data: rooms });
+    await models.Room.findAll({ include: [{ model: Ficha, as: 'ficha' }, { model: User, as: 'user' }]})
+      .then((rooms) => res.status(201).json({ data: rooms }))
   } catch (erro) {
-    console.log('Erro ao insirir no banco ' + erro);
     res.status(500).send(erro);
   }
 }
@@ -15,47 +14,26 @@ export async function getRoom (req, res) {
 export async function getOneRoom (req, res) {
   try {
     const { id } = req.params;
-    const room = await models.Room.findOne({ where: { id } });
-    res.status(201).json({ data: room });
+    await models.Room.findOne({ where: { id } })
+      .then((room)=> res.status(201).json({ data: room }));
   } catch (erro) {
-    console.log('Erro ao insirir no banco ' + erro);
     res.status(500).send(erro);
   }
 }
 
-
 export async function createRoom (req, res) {
   try {
-    req.assert("name", "Campo nome é obrigatório ").notEmpty();
-    req.assert("descricao", "Campo descriçãp é obrigatório ").notEmpty();
-    req.assert("numJogadores", "Campo numero de jogadores é obrigatório ").notEmpty();
-    req.assert("privado", "Campo privado/publico é obrigatório ").notEmpty();
-    var erros = req.validationErrors();
-    if(erros){
-      console.log('Erros de validação foram encontrados');
-      res.status(400).send(erros);
-    }
     const { name, descricao, numJogadores, userId, privado, senha } = req.body;
     if(privado == true){
-      req.assert("senha", "Campo senha é obrigatório ").notEmpty();
-      var senhaErro = req.validationErrors();
-      if(senhaErro){
-        res.status(400).send(senhaErro);
-      }
-      let newPrivateRoom = await models.Room.create({ name, descricao, numJogadores, userId, privado, senha },
-        { fields: ['name', 'descricao', 'numJogadores', 'userId', 'privado', 'senha'] });
-      if (newPrivateRoom) {
-        return res.status(201).json({ message: 'Sala criada com sucesso', data: newPrivateRoom });
-      }
+      await models.Room.create({ name, descricao, numJogadores, userId, privado, senha },
+        { fields: ['name', 'descricao', 'numJogadores', 'userId', 'privado', 'senha'] })
+          .then((newPrivateRoom) => res.status(201).json({ message: 'Sala criada com sucesso', data: newPrivateRoom }))
     } else {
-      let newPublicRoom = await models.Room.create({ name, descricao, numJogadores, userId, privado, senha },
-        { fields: ['name', 'descricao', 'numJogadores', 'userId', 'privado', 'senha'] });
-      if (newPublicRoom) {
-        return res.status(201).json({ message: 'Sala criada com sucesso', data: newPublicRoom });
-      }
+      await models.Room.create({ name, descricao, numJogadores, userId, privado, senha },
+        { fields: ['name', 'descricao', 'numJogadores', 'userId', 'privado', 'senha'] })
+          .then((newPublicRoom) => res.status(201).json({ message: 'Sala criada com sucesso', data: newPublicRoom }))
     }
   } catch (erro) {
-    console.log('Erro ao insirir no banco ' + erro);
     res.status(500).send(erro);
   }
 }

@@ -13,7 +13,6 @@ RUN npm install -g sequelize-cli
 
 COPY . .
 
-COPY ormconfig.docker.json ./ormconfig.json
 COPY .env ./
 
 EXPOSE 8000

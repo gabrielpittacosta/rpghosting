@@ -6,10 +6,8 @@ const models = require('../models/index')
 const regrasDeValidacaoCreateUser = () => {
   return [
     check('name')
-      .isAlpha('Campo nome aceita somente letras')
       .not().isEmpty().withMessage('Campo nome é obrigatório')
       .matches('[a-z]').withMessage('Campo nome contem pelo menos uma letra minuscula')
-      .matches('[A-Z]').withMessage('Campo nome comtem pelo menos uma letra maiuscula')
       .isLength({ min: 3, max: 30 }).withMessage('Campo nome tem no minimo 3 caracteres e no máximo 30 caracteres'),
 
     check('username')
@@ -17,8 +15,8 @@ const regrasDeValidacaoCreateUser = () => {
       .isLength({ min: 4, max: 16 }).withMessage('Campo username tem no minimo 4 caracteres e no máximo 16 caracteres')
       .matches('[a-z]').withMessage('Campo username contem pelo menos uma letra minuscula')
       .isAlphanumeric().withMessage('Campo username tem apenas caracteres e numeros')
-      .custom(async username => {
-        return await models.User.findOne({ where: { username } }).then(user => {
+      .custom( username => {
+        return models.User.findOne({ where: { username } }).then(user => {
           if (user === null) {
             return true
           } else {
@@ -29,9 +27,9 @@ const regrasDeValidacaoCreateUser = () => {
 
     check('email')
       .not().isEmpty().withMessage('Campo email é obrigatório')
-      .isEmail().withMessage('Campo email é obrigatório')
-      .custom(async email => {
-        return await models.User.findOne({ where: { email } }).then(user => {
+      .isEmail().withMessage('Campo email está no formato errado')
+      .custom(email => {
+        return models.User.findOne({ where: { email } }).then(user => {
           if (user === null) {
             return true
           } else {
@@ -41,7 +39,7 @@ const regrasDeValidacaoCreateUser = () => {
       }).withMessage('Este email já existe'),
 
     check('password')
-      .not().isEmpty().withMessage('Campo email é obrigatório')
+      .not().isEmpty().withMessage('Campo senha é obrigatório')
       .isLength({ min: 5 }).withMessage('Campo senha tem no minimo 5 caracteres'),
 
     sanitizeBody('*')

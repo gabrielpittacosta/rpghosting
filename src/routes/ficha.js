@@ -6,7 +6,7 @@ const router = express.Router();
 const verifyToken = require('../middleware/authorization');
 
 router.get('/', verifyToken, getFichas);
-router.post('/criar_ficha', verifyToken, createFicha);
+router.post('/criar_ficha', createFicha);
 router.get('/:id', verifyToken, getOneFicha);
 router.delete('/delete/:id', verifyToken, deleteFicha);
 router.put('/update/:id', verifyToken, updateFicha);

@@ -23,7 +23,7 @@ export async function getOneFicha (req, res) {
 
 export async function createFicha (req, res) {
   try {
-    req.assert("nameJogador", "Campo nome do jogador de jogadores é obrigatório ").notEmpty();
+    req.assert("nomeJogador", "Campo nome do jogador de jogadores é obrigatório ").notEmpty();
     req.assert("nomePersonagem", "Campo nome do personagem é obrigatório ").notEmpty();
     var erros = req.validationErrors();
     if(erros){

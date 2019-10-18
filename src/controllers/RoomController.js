@@ -25,9 +25,16 @@ export async function createRoom (req, res) {
   try {
     const { name, descricao, numJogadores, userId, privado, senha } = req.body;
     if(privado == true){
-      await models.Room.create({ name, descricao, numJogadores, userId, privado, senha },
-        { fields: ['name', 'descricao', 'numJogadores', 'userId', 'privado', 'senha'] })
-          .then((newPrivateRoom) => res.status(201).json({ message: 'Sala criada com sucesso', data: newPrivateRoom }))
+      req.assert("senha", "Campo senha é obrigatório ").notEmpty();
+      var erros = req.validationErrors();
+      if(erros){
+        console.log('Erros de validação foram encontrados');
+        res.status(400).send(erros);
+      }else{
+        await models.Room.create({ name, descricao, numJogadores, userId, privado, senha },
+          { fields: ['name', 'descricao', 'numJogadores', 'userId', 'privado', 'senha'] })
+            .then((newPrivateRoom) => res.status(201).json({ message: 'Sala criada com sucesso', data: newPrivateRoom }))
+      }
     } else {
       await models.Room.create({ name, descricao, numJogadores, userId, privado, senha },
         { fields: ['name', 'descricao', 'numJogadores', 'userId', 'privado', 'senha'] })
@@ -37,6 +44,8 @@ export async function createRoom (req, res) {
     res.status(500).send(erro);
   }
 }
+
+
 
 export async function deleteRoom (req, res) {
   try {

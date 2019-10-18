@@ -2,10 +2,12 @@ import { getRoom, getOneRoom, createRoom, deleteRoom, updateRoom, addUser } from
 const express = require('express');
 const router = express.Router();
 const verifyToken = require('../middleware/authorization');
+const { regrasDeValidacaoCreateRoom, validate } = require('../middleware/validation');
+
 
 router.get('/', getRoom);
 router.put('/:id/adicionaruser/', addUser);          
-router.post('/criarsala', verifyToken, createRoom);
+router.post('/criarsala',regrasDeValidacaoCreateRoom(), validate, verifyToken, createRoom);
 router.get('/:id', verifyToken, getOneRoom);
 router.delete('/delete/:id', verifyToken, deleteRoom);
 router.put('/update/:id', verifyToken, updateRoom);

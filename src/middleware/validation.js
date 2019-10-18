@@ -1,5 +1,6 @@
 const { validationResult  } = require('express-validator/check');
 const { regrasDeValidacaoCreateUser } = require('../validations/UserValidacao');
+const { regrasDeValidacaoCreateRoom } = require('../validations/RoomValidacao');
 const validate = (req, res, next) => {
   const errors = validationResult(req);
   if (errors.isEmpty()) {
@@ -11,5 +12,6 @@ const validate = (req, res, next) => {
 }
 module.exports =  {
   regrasDeValidacaoCreateUser,
+  regrasDeValidacaoCreateRoom,
   validate,
 }

@@ -45,8 +45,6 @@ export async function createRoom (req, res) {
   }
 }
 
-
-
 export async function deleteRoom (req, res) {
   try {
     const { id } = req.params;
@@ -87,18 +85,13 @@ export async function addUser (req, res) {
     const { id } = req.params;
     const { username } = req.body;
     const NewUser = await models.User.findOne({ where:{ username } });
-    const room = await models.Room.findOne({ where:{ id } });
-    var jogadores = [];
-    for(var i = 0; i < 10; i++){
-      jogadores.push(NewUser)
-      console.log(jogadores);
-    }
-    if(room.length > 0) {
-      room.forEach(async rooms => {
-        await jogadores.push(rooms.update({ jogadores }))
-      })  
-    }
-    return res.status(200).json({ dataUser: NewUser, dataRoom: room, ArrayTest: jogadores });
+    const room = await models.Room.findOne({ where:{ id } }).then((room)=>{
+      var user = JSON.stringify({data: NewUser, entrou: new Date() });
+      models.Room.update({
+        jogadores: models.sequelize.fn( 'array_append',  models.sequelize.col('jogadores'), user   
+      )},{where: {'jogadores': jogadores}})
+    })
+    return res.status(200).json({ dataUser: NewUser, dataRoom: room });
   } catch (erro) {
     console.log('Erro ao insirir no banco ' + erro);
     res.status(500).send(erro);

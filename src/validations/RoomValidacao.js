@@ -10,7 +10,7 @@ const regrasDeValidacaoCreateRoom = () => { return[
 
     check('descricao')
         .not().isEmpty().withMessage('Campo descrição é obrigatório')
-        .isAlphanumeric().withMessage(''),
+        .isString().withMessage('Formato inválido'),
 
     check('numJogadores')
         .not().isEmpty().withMessage('É obrigatório inserir o número de jogadores')
@@ -18,7 +18,7 @@ const regrasDeValidacaoCreateRoom = () => { return[
 
     check('privado')
         .not().isEmpty().withMessage('É obrigatório escolher entre privado ou público')
-        .isBoolean().withMessage(''),
+        .isBoolean().withMessage('Formato inválido'),
 ]}
 
 module.exports = {

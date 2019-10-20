@@ -29,7 +29,7 @@ module.exports = {
       },
       jogadores: {
         allowNull: true,
-        type: DataTypes.ARRAY(DataTypes.INTEGER)
+        type: DataTypes.ARRAY(DataTypes.JSONB)
       },
       userId: {
         type: DataTypes.INTEGER,

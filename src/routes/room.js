@@ -5,9 +5,9 @@ const verifyToken = require('../middleware/authorization');
 const { regrasDeValidacaoCreateRoom, validate } = require('../middleware/validation');
 
 
-router.get('/', getRoom);
+router.get('/',verifyToken, getRoom);
 router.put('/:id/adicionaruser/', addUser);          
-router.post('/criarsala',regrasDeValidacaoCreateRoom(), validate, createRoom);
+router.post('/criarsala',regrasDeValidacaoCreateRoom(),verifyToken, validate, createRoom);
 router.get('/:id', verifyToken, getOneRoom);
 router.delete('/delete/:id', verifyToken, deleteRoom);
 router.put('/update/:id', verifyToken, updateRoom);

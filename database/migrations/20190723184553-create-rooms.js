@@ -29,7 +29,7 @@ module.exports = {
       },
       jogadores: {
         defaultValue: [],
-        type: DataTypes.ARRAY(DataTypes.JSON)
+        type: DataTypes.ARRAY(DataTypes.STRING)
       },
       userId: {
         type: DataTypes.INTEGER,

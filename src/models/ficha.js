@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const Ficha = sequelize.define('Ficha', {
+  const CharacterSheet = sequelize.define('CharacterSheet', {
     nomeJogador: DataTypes.STRING,
     nomePersonagem: DataTypes.STRING,
     classe: DataTypes.STRING,
@@ -29,17 +29,6 @@ module.exports = (sequelize, DataTypes) => {
     userId: DataTypes.INTEGER,
     roomId: DataTypes.INTEGER
   })
-/*
-  Ficha.validadeUser = async (user) => {
-    try {
-      if (){
-        return true
-      }
-    } catch (e) {
-      console.error(e)
-    }
-    return false
-  }
-*/
-  return Ficha
+
+  return CharacterSheet
 }

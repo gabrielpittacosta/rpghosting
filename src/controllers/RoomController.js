@@ -1,10 +1,13 @@
+import { format } from 'util';
+import { sequelize } from '../models';
+
 const models = require('../models/index');
 const User = require('../models/index').User
 const Ficha = require('../models/index').Ficha
 
 export async function getRoom (req, res) {
   try {
-    await models.Room.findAll({ include: [{ model: Ficha, as: 'ficha' }, { model: User, as: 'user' }]})
+    await models.Room.findAll({ include: [{ model: Ficha, as: 'characterSheetInfo' }, { model: User, as: 'user' }]})
       .then((rooms) => res.status(201).json({ data: rooms }))
   } catch (erro) {
     res.status(500).send(erro);
@@ -85,13 +88,14 @@ export async function addUser (req, res) {
     const { id } = req.params;
     const { username } = req.body;
     const NewUser = await models.User.findOne({ where:{ username } });
-    const room = await models.Room.findOne({ where:{ id } }).then((room)=>{
-      var user = JSON.stringify({data: NewUser, entrou: new Date() });
-      models.Room.update({
-        jogadores: models.sequelize.fn( 'array_append',  models.sequelize.col('jogadores'), user   
-      )},{where: {'jogadores': jogadores}})
-    })
-    return res.status(200).json({ dataUser: NewUser, dataRoom: room });
+    const room = await models.Room.findOne({ where:{ id } })
+    const jogadores = []
+    jogadores.push(NewUser)
+    await models.Room.update({'jogadores': sequelize.fn('array_append', sequelize.col('jogadores'), NewUser)},
+      {'where':{'jogadores':NewUser}}).then((novaSala)=>{
+        res.status(200).jsson({ dataUser: NewUser, dataRoom: room, Array: jogadores, NovaSala:novaSala })
+      })
+    return ;
   } catch (erro) {
     console.log('Erro ao insirir no banco ' + erro);
     res.status(500).send(erro);

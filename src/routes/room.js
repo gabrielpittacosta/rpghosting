@@ -7,7 +7,7 @@ const { regrasDeValidacaoCreateRoom, validate } = require('../middleware/validat
 
 router.get('/', getRoom);
 router.put('/:id/adicionaruser/', addUser);          
-router.post('/criarsala',regrasDeValidacaoCreateRoom(), validate, verifyToken, createRoom);
+router.post('/criarsala',regrasDeValidacaoCreateRoom(), validate, createRoom);
 router.get('/:id', verifyToken, getOneRoom);
 router.delete('/delete/:id', verifyToken, deleteRoom);
 router.put('/update/:id', verifyToken, updateRoom);

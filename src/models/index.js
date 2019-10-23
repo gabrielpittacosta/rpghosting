@@ -31,23 +31,37 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-// TABELAS
+
 db.User = require('./user')(sequelize, Sequelize);
 db.Room = require('./room')(sequelize, Sequelize);
-db.Ficha = require('./ficha')(sequelize, Sequelize);
+db.CharacterSheet = require('./characterSheet/characterSheet')(sequelize, Sequelize);
+db.CharacterSheetInfo = require('./characterSheet/characterSheetInfo')(sequelize, Sequelize);
+db.CharacterSheetAttribute = require('./characterSheet/characterSheetAttribute')(sequelize, Sequelize);
+db.CharacterSheetResistTest = require('./characterSheet/characterSheetResistTest')(sequelize, Sequelize);
+db.CharacterSheetExpertise = require('./characterSheet/characterSheetExpertise')(sequelize, Sequelize);
 db.Dado = require('./dado')(sequelize, Sequelize);
 
-// ASSOCIAÇÕES
-// USUARIO 1:N FICHA
-db.User.hasMany(db.Ficha, { foreignKey: 'userId', as: 'ficha' });
-db.Ficha.belongsTo(db.User, { foreignKey: 'userId', as: 'user'});
-// USUARIO N:N SALA
+
+db.User.hasMany(db.CharacterSheetInfo, { foreignKey: 'userId', as: 'characterSheetInfo' });
+db.CharacterSheetInfo.belongsTo(db.User, { foreignKey: 'userId', as: 'user'});
+
 db.User.hasMany(db.Room, { foreignKey: 'userId', as: 'room' });
 db.Room.belongsTo(db.User, { foreignKey: 'userId', as: 'user' });
-// SALA 1:N FICHA
-db.Room.hasMany(db.Ficha, { foreignKey: 'roomId', as: 'ficha' });
-db.Ficha.belongsTo(db.Room, { foreignKey: 'roomId', as: 'room' });
-// VERIFICAÇÃO DO EMAIL
+
+db.Room.hasMany(db.CharacterSheetInfo, { foreignKey: 'roomId', as: 'characterSheetInfo' });
+db.CharacterSheetInfo.belongsTo(db.Room, { foreignKey: 'roomId', as: 'room' });
+
+db.CharacterSheetInfo.hasOne(db.CharacterSheet, { foreignKey: 'characterSheetInfoId', as: 'characterSheet' });
+db.CharacterSheet.belongsTo(db.CharacterSheetInfo, { foreignKey: 'characterSheetInfoId', as: 'characterSheetInfo' });
+
+db.CharacterSheet.hasOne(db.CharacterSheetAttribute, { foreignKey: 'characterSheetId', as: 'characterSheetAttribute' });
+db.CharacterSheetAttribute.belongsTo(db.CharacterSheet, { foreignKey: 'characterSheetId', as: 'characterSheet' });
+
+db.CharacterSheet.hasOne(db.CharacterSheetResistTest, { foreignKey: 'characterSheetId', as: 'characterSheetResistTest' });
+db.CharacterSheetResistTest.belongsTo(db.CharacterSheet, { foreignKey: 'characterSheetId', as: 'characterSheet' });
+
+db.CharacterSheet.hasOne(db.CharacterSheetExpertise, { foreignKey: 'characterSheetId', as: 'characterSheetExpertise' });
+db.CharacterSheetExpertise.belongsTo(db.CharacterSheet, { foreignKey: 'characterSheetId', as: 'characterSheet' });
 
 
 module.exports = db  

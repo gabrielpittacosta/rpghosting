@@ -1,8 +1,26 @@
+import { CharacterSheet } from '../models';
+
 const models = require('../models/index');
 
 export async function getFichas (req, res) {
   try {
-    const fichas = await models.Ficha.findAll();
+    const fichas = await models.CharacterSheetInfo.findAll({ 
+      include: [{ 
+        model: models.CharacterSheet, 
+        as: 'characterSheet', 
+        include: [
+          { 
+            model: models.CharacterSheetAttribute,
+            as: 'characterSheetAttribute' },
+          { 
+            model: models.CharacterSheetResistTest,
+            as: 'characterSheetResistTest' },
+          { 
+            model: models.CharacterSheetExpertise,
+            as: 'characterSheetExpertise' }
+          ]
+      }]
+    });
     res.status(201).json({ data: fichas });
   } catch (erro) {
     console.log('Erro ao insirir no banco ' + erro);
@@ -13,8 +31,24 @@ export async function getFichas (req, res) {
 export async function getOneFicha (req, res) {
   try {
     const { id } = req.params;
-    const ficha = await models.Ficha.findOne({ where: { id } });
-    res.status(201).json({ data: ficha });
+    const ficha = await models.CharacterSheetInfo.findOne({ where: { id }, 
+      include: [{ 
+        model: models.CharacterSheet, 
+        as: 'characterSheet', 
+        include: [
+          { 
+            model: models.CharacterSheetAttribute,
+            as: 'characterSheetAttribute' },
+          { 
+            model: models.CharacterSheetResistTest,
+            as: 'characterSheetResistTest' },
+          { 
+            model: models.CharacterSheetExpertise,
+            as: 'characterSheetExpertise' }
+        ]
+      }] 
+    });
+    res.status(201).json({ characterSheet: ficha });
   } catch (erro) {
     console.log('Erro ao insirir no banco ' + erro);
     res.status(500).send(erro);
@@ -23,18 +57,32 @@ export async function getOneFicha (req, res) {
 
 export async function createFicha (req, res) {
   try {
-    req.assert("nomeJogador", "Campo nome do jogador de jogadores é obrigatório ").notEmpty();
-    req.assert("nomePersonagem", "Campo nome do personagem é obrigatório ").notEmpty();
-    var erros = req.validationErrors();
-    if(erros){
-      console.log('Erros de validação foram encontrados');
-      res.status(400).send(erros);
-    }
-    const { nomeJogador, nomePersonagem, userId, roomId } = req.body;
-    let newFicha = await models.Ficha.create({ nomeJogador, nomePersonagem, userId, roomId },
-      { fields: ['nomeJogador', 'nomePersonagem', 'userId', 'roomId'] });
-    if (newFicha) {
-      return res.status(201).json({ message: 'Ficha criada com sucesso', data: newFicha });
+    const { nome_personagem, raca, classe, antecedentes, tendencia, level, experiencia, userId, roomId } = req.body;
+    const jogador = await models.User.findOne({where: userId});
+    const sala = await models.Room.findOne({where: roomId});
+    if(sala.userId == userId){
+      await models.CharacterSheetInfo.create({ nome_personagem, raca, classe, antecedentes, tendencia, level, experiencia, userId, roomId},
+        { fields: ['nome_personagem', 'raca', 'classe', 'antecedentes', 'level', 'experiencia', 'userId', 'roomId'] })
+          .then(async (newFicha)=> {
+            const characterSheetInfoId = newFicha.id
+            await models.CharacterSheet.create({ characterSheetInfoId },{ fields: ['characterSheetInfoId'] })
+              .then(async (newFicha)=> {
+                const characterSheetId = newFicha.id
+                await models.CharacterSheetAttribute.create({ characterSheetId },{ fields: ['characterSheetId'] })
+              .then(async (newFicha)=> {
+                const characterSheetId = newFicha.id
+                await models.CharacterSheetResistTest.create({ characterSheetId },{ fields: ['characterSheetId'] })
+              .then(async (newFicha)=>{
+                const characterSheetId = newFicha.id
+                await models.CharacterSheetExpertise.create({ characterSheetId },{ fields: ['characterSheetId'] })                
+                })  
+              })
+            })
+      }).then((newFicha)=> {
+          res.status(201).json({ message: 'Ficha criada com sucesso', data: newFicha, jogador: jogador, sala: sala })
+      })  
+    }else{
+      return res.status(400).json({ message: 'É necessário estar na sala para criar ficha' });
     }
   } catch (erro) {
     console.log('Erro ao insirir no banco ' + erro);
@@ -113,11 +161,3 @@ export async function updateFicha (req, res) {
 }
 
 
-export async function validarFicha(req, res, next) {
-  try {
-    const { id } = req.params;
-  } catch (erro) {
-    console.log('Erro ao insirir no banco ' + erro);
-    res.status(500).send(erro);
-  }
-}

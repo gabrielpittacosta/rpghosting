@@ -19,6 +19,10 @@ const regrasDeValidacaoCreateRoom = () => { return[
     check('privado')
         .not().isEmpty().withMessage('É obrigatório escolher entre privado ou público')
         .isBoolean().withMessage('Formato inválido'),
+
+    sanitizeBody('*')
+      .trim()
+      .escape(),
 ]}
 
 module.exports = {

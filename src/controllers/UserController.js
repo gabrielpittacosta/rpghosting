@@ -1,7 +1,7 @@
 const models = require('../models/index');
 export async function getUser(req, res) {
   try {
-    await models.User.findAll({ include: [{ model: models.Room, as: 'room', }, { model: models.Ficha, as: 'ficha' }], })
+    await models.User.findAll({ include: [{ model: models.Room, as: 'room', }, { model: models.CharacterSheetInfo, as: 'characterSheetInfo' }], })
       .then(users => res.status(201).json({ data: users }));
   } catch(erro) {
     res.status(500).send(erro);

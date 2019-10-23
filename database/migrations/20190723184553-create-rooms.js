@@ -28,8 +28,8 @@ module.exports = {
         type: DataTypes.BOOLEAN
       },
       jogadores: {
-        allowNull: true,
-        type: DataTypes.ARRAY(DataTypes.JSONB)
+        defaultValue: [],
+        type: DataTypes.ARRAY(DataTypes.JSON)
       },
       userId: {
         type: DataTypes.INTEGER,

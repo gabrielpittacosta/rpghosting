@@ -2,6 +2,7 @@ import { sequelize } from '../models';
 const models = require('../models/index');
 const User = require('../models/index').User
 
+
 export async function getRoom (req, res) {
   try {
     await models.Room.findAll({
@@ -33,11 +34,12 @@ export async function getOneRoom (req, res) {
 
 export async function createRoom (req, res) {
   try {
-    const { name, descricao, numJogadores, userId, privado, senha } = req.body;
+    const { name, descricao, numJogadores, privado, senha } = req.body;
+    const userId = req.userData.data.id
     if(privado == true){
       req.assert("senha", "Campo senha é obrigatório ").notEmpty();
       var erros = req.validationErrors();
-      if(erros){
+      if(erros){ 
         console.log('Erros de validação foram encontrados');
         res.status(400).send(erros);
       }else{
@@ -96,18 +98,22 @@ export async function addUser (req, res) {
     const { username } = req.body;
     const NewUser = await models.User.findOne({ where:{ username } });
     const room = await models.Room.findOne({ where:{ id } })
+    const mestre = await models.User.findOne({where: room.userId})
     const jogadores = []
-    const user = NewUser.username
-    if(room.jogadores.length <  room.numJogadores){
-      room.jogadores.find(function(userjois) {
-        if(userjois === username){
-          return res.status(400).json({message:'User já está na sala'});
+    if(username !== mestre.username){
+      if(room.jogadores.length < room.numJogadores){
+        const checkUser = room.jogadores.find(jogador => jogador === NewUser.username)
+        if(checkUser){
+          return res.status(400).json({message:'Usuário já está na sala'});
+        }else{
+          await models.Room.update({'jogadores': sequelize.fn('array_append', sequelize.col('jogadores'), NewUser.username)},
+          {where: { 'id': id }}).then(()=> res.status(200).json({ dataUser: NewUser, dataRoom: room, Array: jogadores }))
         }
-      })
-      await models.Room.update({'jogadores': sequelize.fn('array_append', sequelize.col('jogadores'), user)},
-        {where: { 'id': id }}).then(()=> res.status(200).json({ dataUser: NewUser, dataRoom: room, Array: jogadores }))
+      }else{
+        return res.status(400).json({message:'Sala está cheia'});
+      }
     }else{
-      return res.status(400).json({message:'Sala esta cheia'});
+      return res.status(400).json({message:'Este usuário é dono da sala'});
     }
   } catch (erro) {
     console.log('Erro ao insirir no banco ' + erro);

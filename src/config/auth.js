@@ -5,7 +5,7 @@ const models = require('../models/index')
 
 module.exports = (app) => {
   const jwtConfig = app.config.jwt
-  const Users = models.Users
+  
 
   const options = {}
 
@@ -13,7 +13,7 @@ module.exports = (app) => {
   options.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken()
 
   const strategy = new Strategy(options, (payload, done) => {
-    Users.findOne({ where: payload.id })
+    models.User.findOne({ where: payload.id })
       .then(user => {
         if (user) {
           return done(null, {

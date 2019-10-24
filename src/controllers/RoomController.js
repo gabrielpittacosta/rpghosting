@@ -4,7 +4,17 @@ const User = require('../models/index').User
 
 export async function getRoom (req, res) {
   try {
-    await models.Room.findAll({ include: [{ model: models.CharacterSheetInfo, as: 'characterSheetInfo' }, { model: User, as: 'user' }]})
+    await models.Room.findAll({
+      attributes:['id','name','descricao','numJogadores','userId','senha','privado','jogadores'],
+      include: [{ 
+          model: models.CharacterSheetInfo, 
+          as: 'characterSheetInfo' 
+        },
+        { 
+          model: User, as: 'dono_da_sala',
+          attributes: ['username','isMestre'] 
+        }
+      ]})
       .then((rooms) => res.status(200).json({ data: rooms }))
   } catch (erro) {
     res.status(500).send(erro);
@@ -87,10 +97,18 @@ export async function addUser (req, res) {
     const NewUser = await models.User.findOne({ where:{ username } });
     const room = await models.Room.findOne({ where:{ id } })
     const jogadores = []
-    const user = jogadores.push(NewUser.username)
-    const test = NewUser.username
-    await models.Room.update({'jogadores': sequelize.fn('array_append', sequelize.col('jogadores'), test)},
-      {where: {'id': user }}).then(()=> res.status(200).json({ dataUser: NewUser, dataRoom: room, Array: jogadores }))
+    const user = NewUser.username
+    if(room.jogadores.length <  room.numJogadores){
+      room.jogadores.find(function(userjois) {
+        if(userjois === username){
+          return res.status(400).json({message:'User já está na sala'});
+        }
+      })
+      await models.Room.update({'jogadores': sequelize.fn('array_append', sequelize.col('jogadores'), user)},
+        {where: { 'id': id }}).then(()=> res.status(200).json({ dataUser: NewUser, dataRoom: room, Array: jogadores }))
+    }else{
+      return res.status(400).json({message:'Sala esta cheia'});
+    }
   } catch (erro) {
     console.log('Erro ao insirir no banco ' + erro);
     res.status(500).send(erro);

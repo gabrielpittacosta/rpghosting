@@ -46,7 +46,7 @@ db.User.hasMany(db.CharacterSheetInfo, { foreignKey: 'userId', as: 'characterShe
 db.CharacterSheetInfo.belongsTo(db.User, { foreignKey: 'userId', as: 'user'});
 
 db.User.hasMany(db.Room, { foreignKey: 'userId', as: 'room' });
-db.Room.belongsTo(db.User, { foreignKey: 'userId', as: 'user' });
+db.Room.belongsTo(db.User, { foreignKey: 'userId', as: 'dono_da_sala' });
 
 db.Room.hasMany(db.CharacterSheetInfo, { foreignKey: 'roomId', as: 'characterSheetInfo' });
 db.CharacterSheetInfo.belongsTo(db.Room, { foreignKey: 'roomId', as: 'room' });

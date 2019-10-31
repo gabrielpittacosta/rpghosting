@@ -39,6 +39,8 @@ db.CharacterSheetInfo = require('./characterSheet/characterSheetInfo')(sequelize
 db.CharacterSheetAttribute = require('./characterSheet/characterSheetAttribute')(sequelize, Sequelize);
 db.CharacterSheetResistTest = require('./characterSheet/characterSheetResistTest')(sequelize, Sequelize);
 db.CharacterSheetExpertise = require('./characterSheet/characterSheetExpertise')(sequelize, Sequelize);
+db.Item = require('./item')(sequelize, Sequelize);
+db.InventorySheet = require('./inventorySheet')(sequelize, Sequelize);
 db.Dado = require('./dado')(sequelize, Sequelize);
 
 
@@ -62,6 +64,12 @@ db.CharacterSheetResistTest.belongsTo(db.CharacterSheet, { foreignKey: 'characte
 
 db.CharacterSheet.hasOne(db.CharacterSheetExpertise, { foreignKey: 'characterSheetId', as: 'characterSheetExpertise' });
 db.CharacterSheetExpertise.belongsTo(db.CharacterSheet, { foreignKey: 'characterSheetId', as: 'characterSheet' });
+
+db.User.hasOne(db.InventorySheet, { foreignKey: 'userId', as: 'inventorySheet' });
+db.InventorySheet.belongsTo(db.User, { foreignKey: 'userId', as: 'dono_do_inventario' });
+
+db.InventorySheet.hasMany(db.Item, { foreignKey: 'inventorySheetId', as: 'itens' });
+db.Item.belongsTo(db.InventorySheet, { foreignKey: 'inventorySheetId', as: 'inventario' });
 
 
 module.exports = db  

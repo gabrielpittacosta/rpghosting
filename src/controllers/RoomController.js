@@ -6,7 +6,7 @@ const User = require('../models/index').User
 export async function getRoom (req, res) {
   try {
     await models.Room.findAll({
-      attributes:['id','name','descricao','numJogadores','userId','senha','privado','jogadores'],
+      attributes:['name','descricao','numJogadores','senha','privado','jogadores'],
       include: [{ 
           model: models.CharacterSheetInfo, 
           as: 'characterSheetInfo' 
@@ -27,6 +27,28 @@ export async function getOneRoom (req, res) {
     const { id } = req.params;
     await models.Room.findOne({ where: { id } })
        .then((room)=> res.status(200).json({ data: room }));
+  } catch (erro) {
+    res.status(500).send(erro);
+  }
+}
+
+export async function getUsernameRoom (req, res) {
+  try {
+    const username = req.params.username
+    const user = await models.User.findOne({where: {'username':username}, attributes:['id']})
+    await models.Room.findAll({
+      where: {'userId':user.id},
+      attributes:['name','descricao','numJogadores','senha','privado','jogadores'],
+      include: [{ 
+          model: models.CharacterSheetInfo, 
+          as: 'characterSheetInfo' 
+        },
+        { 
+          model: User, as: 'dono_da_sala',
+          attributes: ['username','isMestre'] 
+        }
+      ]})
+      .then((rooms) => res.status(200).json({ data: rooms }))
   } catch (erro) {
     res.status(500).send(erro);
   }

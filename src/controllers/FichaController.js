@@ -57,9 +57,11 @@ export async function getOneFicha (req, res) {
 
 export async function createFicha (req, res) {
   try {
-    const { nome_personagem, raca, classe, antecedentes, tendencia, level, experiencia, userId, roomId } = req.body;
+    const { nome_personagem, raca, classe, antecedentes, tendencia, level, experiencia } = req.body;
+    const roomId = req.params.id
+    const userId = req.userData.data.id
     const jogador = await models.User.findOne({where: userId});
-    const sala = await models.Room.findOne({where: roomId});
+    const sala = await models.Room.findOne({where: {'id':roomId}});
     if(sala.userId == userId){
       await models.CharacterSheetInfo.create({ nome_personagem, raca, classe, antecedentes, tendencia, level, experiencia, userId, roomId},
         { fields: ['nome_personagem', 'raca', 'classe', 'antecedentes', 'level', 'experiencia', 'userId', 'roomId'] })

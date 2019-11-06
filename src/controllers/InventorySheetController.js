@@ -26,15 +26,16 @@ export async function deleteInventorySheet (req, res) {
 
 export async function addItemToInventorySheet (req, res) {
   try {
-    const nome_item = req.body
-    const item = await models.Item.findOne({where:{'nome':nome_item}})
-    if(nome_item != item){
-      res.status(400).json({mensagem:'eita!'})
+    const inventory = req.params;
+    const { nome } = req.body;
+    const item = await models.Item.findOne({where:{ 'nome': nome }});
+    console.log(item);
+    console.log(inventory);
+    if(item !== null){
+      console.log('Existe esse item');
     }else{
-      const inventorySheet = req.params.id
-      
+      console.log('Não existe esse item');
     }
-    
   } catch (erro) {
     console.log('Erro ao insirir no banco ' + erro);
     res.status(500).send(erro);

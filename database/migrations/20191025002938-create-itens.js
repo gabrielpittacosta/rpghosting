@@ -13,6 +13,9 @@ module.exports = {
         nome: {
           type: DataTypes.STRING
         },
+        tipo_inventario: {
+          type: DataTypes.STRING
+        },
         preco: {
           type: DataTypes.FLOAT
         },

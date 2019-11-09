@@ -12,7 +12,19 @@ module.exports = {
         type: DataTypes.STRING,
         unique: true
       },
-      armaduras_e_escudos: {
+      pergaminhos: {
+        defaultValue: [],
+        type: DataTypes.ARRAY(DataTypes.STRING)
+      },
+      poções: {
+        defaultValue: [],
+        type: DataTypes.ARRAY(DataTypes.STRING)
+      },
+      itens_maravilhosos: {
+        defaultValue: [],
+        type: DataTypes.ARRAY(DataTypes.STRING)
+      },
+      aneis: {
         defaultValue: [],
         type: DataTypes.ARRAY(DataTypes.STRING)
       },
@@ -20,23 +32,23 @@ module.exports = {
         defaultValue: [],
         type: DataTypes.ARRAY(DataTypes.STRING)
       },
-      consumiveis: {
+      armaduras: {
         defaultValue: [],
         type: DataTypes.ARRAY(DataTypes.STRING)
       },
-      engrenagens: {
+      bastões: {
         defaultValue: [],
         type: DataTypes.ARRAY(DataTypes.STRING)
       },
-      diversos: {
+      cajados: {
         defaultValue: [],
         type: DataTypes.ARRAY(DataTypes.STRING)
       },
-      ferramentas: {
+      varinhas: {
         defaultValue: [],
         type: DataTypes.ARRAY(DataTypes.STRING)
       },
-      dinheiro_e_saude: {
+      maças: {
         defaultValue: [],
         type: DataTypes.ARRAY(DataTypes.STRING)
       },

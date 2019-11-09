@@ -162,4 +162,6 @@ export async function updateFicha (req, res) {
   }
 }
 
-
+export async function gainXp (req, res) {
+  
+}

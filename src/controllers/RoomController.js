@@ -1,4 +1,4 @@
-import { sequelize } from '../models';
+    import { sequelize } from '../models';
 const models = require('../models/index');
 const User = require('../models/index').User
 
@@ -66,7 +66,7 @@ export async function createRoom (req, res) {
         res.status(400).send(erros);
       }else{
         await models.Room.create({ name, descricao, numJogadores, userId, privado, senha },
-          { fields: ['name', 'descricao', 'numJogadores', 'userId', 'privado', 'senha'] })
+          { fields: ['id' ,'name', 'descricao', 'numJogadores', 'userId', 'privado', 'senha'] })
             .then((newPrivateRoom) => res.status(201).json({ message: 'Sala criada com sucesso', data: newPrivateRoom }))
       }
     } else {

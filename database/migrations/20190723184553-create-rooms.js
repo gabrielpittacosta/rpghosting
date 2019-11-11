@@ -1,11 +1,11 @@
+
 module.exports = {
   up: (queryInterface, DataTypes) => {
     return queryInterface.createTable('Rooms', {
       id: {
+        type: DataTypes.UUID,
         allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: DataTypes.INTEGER
+        primaryKey: true
       },
       name: {
         allowNull: false,

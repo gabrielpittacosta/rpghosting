@@ -6,7 +6,7 @@ const User = require('../models/index').User
 export async function getRoom (req, res) {
   try {
     await models.Room.findAll({
-      attributes:['name','descricao','numJogadores','senha','privado','jogadores'],
+      attributes:['id','name','descricao','numJogadores','privado','jogadores'],
       include: [{ 
           model: models.CharacterSheetInfo, 
           as: 'characterSheetInfo' 
@@ -25,7 +25,7 @@ export async function getRoom (req, res) {
 export async function getOneRoom (req, res) {
   try {
     const { id } = req.params;
-    await models.Room.findOne({ where: { id } })
+    await models.Room.findOne({ where: { 'id' : id } })
        .then((room)=> res.status(200).json({ data: room }));
   } catch (erro) {
     res.status(500).send(erro);
@@ -38,7 +38,7 @@ export async function getUsernameRoom (req, res) {
     const user = await models.User.findOne({where: {'username':username}, attributes:['id']})
     await models.Room.findAll({
       where: {'userId':user.id},
-      attributes:['name','descricao','numJogadores','senha','privado','jogadores'],
+      attributes:['id','name','descricao','numJogadores','privado','jogadores'],
       include: [{ 
           model: models.CharacterSheetInfo, 
           as: 'characterSheetInfo' 
@@ -141,4 +141,29 @@ export async function addUser (req, res) {
     console.log('Erro ao insirir no banco ' + erro);
     res.status(500).send(erro);
   }
+}
+
+export async function kickUser (req, res){
+  try {
+    const { id } = req.params;
+    const { jogadores } = await models.Room.findOne({where: {'id':id}});
+    const userKicked = req.body;
+    console.log(jogadores);
+    
+    console.log(jogadores);
+  } catch (erro) {
+    res.status(500).send(erro);
+  }
+}
+export async function enterUser (req, res){
+    try {
+      const userId = req.userData
+      console.log(userId);
+      
+
+      //chama a funcao enterUser na rota o localhost eh 8000
+      //entra no terminal docker-compose up já vai rodar 
+    } catch (erro) {
+      res.status(500).send(erro)
+    }
 }

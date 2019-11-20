@@ -43,31 +43,22 @@ db.Item = require('./item')(sequelize, Sequelize);
 db.InventorySheet = require('./inventorySheet')(sequelize, Sequelize);
 db.Dado = require('./dado')(sequelize, Sequelize);
 
-
 db.User.hasMany(db.CharacterSheetInfo, { foreignKey: 'userId', as: 'characterSheetInfo' });
 db.CharacterSheetInfo.belongsTo(db.User, { foreignKey: 'userId', as: 'user'});
-
 db.User.hasMany(db.Room, { foreignKey: 'userId', as: 'room' });
 db.Room.belongsTo(db.User, { foreignKey: 'userId', as: 'dono_da_sala' });
-
 db.Room.hasMany(db.CharacterSheetInfo, { foreignKey: 'roomId', as: 'characterSheetInfo' });
 db.CharacterSheetInfo.belongsTo(db.Room, { foreignKey: 'roomId', as: 'room' });
-
 db.CharacterSheetInfo.hasOne(db.CharacterSheet, { foreignKey: 'characterSheetInfoId', as: 'characterSheet' });
 db.CharacterSheet.belongsTo(db.CharacterSheetInfo, { foreignKey: 'characterSheetInfoId', as: 'characterSheetInfo' });
-
 db.CharacterSheet.hasOne(db.CharacterSheetAttribute, { foreignKey: 'characterSheetId', as: 'characterSheetAttribute' });
 db.CharacterSheetAttribute.belongsTo(db.CharacterSheet, { foreignKey: 'characterSheetId', as: 'characterSheet' });
-
 db.CharacterSheet.hasOne(db.CharacterSheetResistTest, { foreignKey: 'characterSheetId', as: 'characterSheetResistTest' });
 db.CharacterSheetResistTest.belongsTo(db.CharacterSheet, { foreignKey: 'characterSheetId', as: 'characterSheet' });
-
 db.CharacterSheet.hasOne(db.CharacterSheetExpertise, { foreignKey: 'characterSheetId', as: 'characterSheetExpertise' });
 db.CharacterSheetExpertise.belongsTo(db.CharacterSheet, { foreignKey: 'characterSheetId', as: 'characterSheet' });
-
 db.User.hasOne(db.InventorySheet, { foreignKey: 'userId', as: 'inventorySheet' });
 db.InventorySheet.belongsTo(db.User, { foreignKey: 'userId', as: 'dono_do_inventario' });
-
 db.InventorySheet.hasMany(db.Item, { foreignKey: 'inventorySheetId', as: 'itens' });
 db.Item.belongsTo(db.InventorySheet, { foreignKey: 'inventorySheetId', as: 'inventario' });
 

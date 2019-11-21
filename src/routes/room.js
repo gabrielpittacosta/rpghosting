@@ -8,7 +8,7 @@ const { regrasDeValidacaoCreateRoom, regrasDeValidacaoEnterRoom, validate } = re
 router.get('/',verifyToken, getRoom);
 router.put('/:id/adicionaruser/', addUser);
 router.put('/:id/kickuser', kickUser);
-router.get('/:id/enteruser', verifyToken, enterUser)
+router.put('/:id/enteruser', verifyToken, enterUser)
 router.post('/criarsala',regrasDeValidacaoCreateRoom(), validate, verifyToken, createRoom);
 router.get('/user/:username', getUsernameRoom)
 router.get('/:id', verifyToken, getOneRoom);

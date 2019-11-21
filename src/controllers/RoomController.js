@@ -1,7 +1,6 @@
-    import { sequelize } from '../models';
+import { sequelize } from '../models';
 const models = require('../models/index');
 const User = require('../models/index').User
-
 
 export async function getRoom (req, res) {
   try {
@@ -128,8 +127,11 @@ export async function addUser (req, res) {
         if(checkUser){
           return res.status(400).json({message:'Usuário já está na sala'});
         }else{
-          await models.Room.update({'jogadores': sequelize.fn('array_append', sequelize.col('jogadores'), NewUser.username)},
-          {where: { 'id': id }}).then(()=> res.status(200).json({ dataUser: NewUser, dataRoom: room, Array: jogadores }))
+          await models.Room.update({'jogadores': sequelize.fn('array_append', sequelize.col('jogadores'), NewUser.username)}, {where: { 'id': id }})
+          .then(()=> res.status(200).json({ dataUser: NewUser, dataRoom: room, Array: jogadores }))
+          .then((req, res) => {
+            console.log(req);
+          })
         }
       }else{
         return res.status(400).json({message:'Sala está cheia'});
@@ -155,15 +157,29 @@ export async function kickUser (req, res){
     res.status(500).send(erro);
   }
 }
+
 export async function enterUser (req, res){
     try {
-      const userId = req.userData
-      console.log(userId);
-      
-
-      //chama a funcao enterUser na rota o localhost eh 8000
-      //entra no terminal docker-compose up já vai rodar 
+      const {id} = req.params
+      const userId = req.userData.data.id
+      const room = await models.Room.findOne({ where:{ id } })
+      const NewUser = await models.User.findOne({ where:{ 'id':userId } });      
+      if(room.jogadores.length < room.numJogadores){
+        const checkUser = room.jogadores.find(jogador => jogador === NewUser.username)
+        if(checkUser){
+          return res.status(400).json({message:'Usuário já está na sala'});
+        }else{
+          await models.Room.update({'jogadores': sequelize.fn('array_append', sequelize.col('jogadores'), NewUser.username)}, {where: { 'id': id }})
+          .then(()=> res.status(200).json({ dataUser: NewUser, dataRoom: room, Array: jogadores }))
+        }
+      }else{
+        return res.status(400).json({message:'Sala está cheia'});
+      }
     } catch (erro) {
       res.status(500).send(erro)
     }
+}
+
+export async function quitUser (req, res){
+  
 }
